@@ -9,6 +9,11 @@ const masterRoutes: Array<RouteRecordRaw> = [
         name: 'master-jabatan',
         component: () => import('./master-jabatan.vue')
     },
+    {
+        path: '/master-registrasi',
+        name: 'master-registrasi',
+        component: () => import('./master-registrasi.vue')
+    },
 
 ];
 
