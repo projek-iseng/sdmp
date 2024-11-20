@@ -1,12 +1,15 @@
 //import vue router
 import { createRouter, createWebHistory } from 'vue-router'
 import masterRoutes from '../views/master/master-index'
+
 //define a routes
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: () => import( /* webpackChunkName: "home" */ '../views/Dashboard.vue')
+        component: () => import( /* webpackChunkName: "home" */ '../views/Dashboard.vue'),
+        props: route => ({ isSidebarOpen: route.params.isSidebarOpen }), // Penerusan props
+
     },
     {
         path: '/pegawai-dashboard',
@@ -16,7 +19,9 @@ const routes = [
     {
         path: '/test',
         name: 'test',
-        component: () => import( /* webpackChunkName: "home" */ '../views/test.vue')
+        component: () => import( /* webpackChunkName: "home" */ '../views/test.vue'),
+        meta: { hideNavbar: true }, // Tandai untuk menyembunyikan Navbar
+
     },
     {
         path: '/auth',

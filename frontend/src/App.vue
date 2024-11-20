@@ -1,26 +1,29 @@
 <script setup>
 import Sidebar from './components/Sidebar.vue';
 import Navbar from './components/Navbar.vue';
-// import changeTheme from './components/changeTheme.vue';
 import { ref } from 'vue';
+import { useRoute } from 'vue-router'; // Import useRoute
+
 
 const isSidebarOpen = ref(false);
+const route = useRoute(); // Gunakan useRoute untuk mendapatkan meta field
 
 function handleSidebarToggle(status) {
-  isSidebarOpen.value = status; // Status sidebar diterima di sini
+  isSidebarOpen.value = status;
 }
 </script>
 
 <template>
   <div id="app">
-    <Navbar />
-    <!-- <changeTheme /> -->
-    <Sidebar @toggleSidebar="handleSidebarToggle" />
-    <div :class="{ 'content-with-sidebar': isSidebarOpen, 'content-full': !isSidebarOpen }">
-      <router-view /> <!-- Render konten sesuai route di sini -->
+    <Navbar v-if="!route.meta.hideNavbar" /> <!-- Kirim prop dan dengar event untuk toggle sidebar -->
+    <Sidebar :isSidebarOpen="isSidebarOpen" @update:isSidebarOpen="handleSidebarToggle" />
+    <!-- Konten utama yang dipengaruhi status sidebar -->
+    <div>
+      <router-view :isSidebarOpen="isSidebarOpen" />
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .content-full {
