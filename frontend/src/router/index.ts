@@ -26,7 +26,8 @@ const routes = [
     {
         path: '/auth',
         name: 'auth',
-        component: () => import( /* webpackChunkName: "home" */ '../views/Login/auth.vue')
+        component: () => import( /* webpackChunkName: "home" */ '../views/Login/auth.vue'),
+        meta: { hideNavbar: true, hideSedbar:true },
     },
 
     ...masterRoutes,

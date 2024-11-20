@@ -16,7 +16,7 @@ function handleSidebarToggle(status) {
 <template>
   <div id="app">
     <Navbar v-if="!route.meta.hideNavbar" /> <!-- Kirim prop dan dengar event untuk toggle sidebar -->
-    <Sidebar :isSidebarOpen="isSidebarOpen" @update:isSidebarOpen="handleSidebarToggle" />
+    <Sidebar v-if="!route.meta.hideSedbar" :isSidebarOpen="isSidebarOpen" @update:isSidebarOpen="handleSidebarToggle" />
     <!-- Konten utama yang dipengaruhi status sidebar -->
     <div>
       <router-view :isSidebarOpen="isSidebarOpen" />
