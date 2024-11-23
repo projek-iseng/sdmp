@@ -38,13 +38,6 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a v-ripple href="/test"
-                                                class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
-                                                <i class="pi pi-user mr-2"></i>
-                                                <span class="font-medium">Test</span>
-                                            </a>
-                                        </li>
-                                        <li>
                                             <a v-ripple href="/pegawai-dashboard"
                                                 class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
                                                 <i class="pi pi-user mr-2"></i>
@@ -82,6 +75,31 @@
                                                 </li>
                                             </ul>
                                         </li>
+                                        <li>
+                                            <a v-ripple v-styleclass="{
+                                                selector: '@next',
+                                                enterClass: 'hidden',
+                                                enterActiveClass: 'slidedown',
+                                                leaveToClass: 'hidden',
+                                                leaveActiveClass: 'slideup',
+                                            }"
+                                                class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                                <i class="pi pi-chart-line mr-2"></i>
+                                                <span class="font-medium">SyAdministator</span>
+                                                <i class="pi pi-chevron-down ml-auto"></i>
+                                            </a>
+                                            <ul
+                                                class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
+                                                <li>
+                                                    <a v-ripple href="/Log-users"
+                                                        class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                                        <i class="pi pi-chart-line mr-2"></i>
+                                                        <span class="font-medium">Log User's</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
 
                                     </ul>
                                 </li>

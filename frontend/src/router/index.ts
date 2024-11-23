@@ -17,13 +17,6 @@ const routes = [
         component: () => import( /* webpackChunkName: "home" */ '../views/PegawaiDashboard.vue')
     },
     {
-        path: '/test',
-        name: 'test',
-        component: () => import( /* webpackChunkName: "home" */ '../views/test.vue'),
-        meta: { hideNavbar: true }, // Tandai untuk menyembunyikan Navbar
-
-    },
-    {
         path: '/auth',
         name: 'auth',
         component: () => import( /* webpackChunkName: "home" */ '../views/Login/auth.vue'),

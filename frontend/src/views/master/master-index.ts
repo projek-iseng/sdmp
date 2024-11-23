@@ -14,6 +14,12 @@ const masterRoutes: Array<RouteRecordRaw> = [
         name: 'master-registrasi',
         component: () => import('./master-registrasi.vue')
     },
+    {
+        path: '/Log-users',
+        name: 'Log-users',
+        component: () => import( './LogUsers.vue'),
+
+    },
 
 ];
 

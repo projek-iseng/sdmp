@@ -53,10 +53,10 @@ onMounted(() => {
             <SplitterPanel class="flex align-items-center justify-content-center no-resize" :size="65" > 
                 <div class="formgrid grid">
                     <div class="field grid">
-                        <Card>
+                        <Card class="custom-card " >
                             <template #title>Nama Pegawai</template>
                             <template #content>
-                                <div class="flex justify-content-center align-items-center">
+                                <div class="flex justify-content-center align-items-center" >
                                     <div class="text-center">
                                         <div>
                                             <div class="imgPegawai">
@@ -65,16 +65,23 @@ onMounted(() => {
                                         </div>
                                         <div style="text-items:center;">
                                             <div >
-                                                <span>12052004</span>
+                                                <span>id: 12052004</span>
                                             </div>
                                         </div>
                                         <div>
                                             <div class="formgrid grid">
-                                                <div class="field grid m-1">
+                                                <div class="field col ">
                                                     <span>Derektur</span>
                                                 </div>
-                                                <div class="field grid m-1">
+                                                <div class="field col ">
                                                     <span>DErektur</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="formgrid grid">
+                                                <div class="field col m-1">
+                                                    <span>tanggal gabung</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,6 +257,7 @@ onMounted(() => {
   pointer-events: none; 
   user-select: none; 
 }
-
-
+.custom-card{
+    border: 1px solid white;
+}
 </style>

@@ -55,7 +55,7 @@
     >
       <template #header>
         <div class="flex flex-wrap gap-2 align-items-center justify-content-between">
-          <h4 class="m-0">Data Pegawai</h4>
+          <h4 class="m-0">Log Pegawai dan Aktifitas Users</h4>
           <IconField iconPosition="left">
             <InputIcon>
               <i class="pi pi-search" />
@@ -311,8 +311,8 @@
 import { ref, onMounted } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
-import apiClient from "../services/apiService";
-import { ProductService } from "../services/ProductService";
+import apiClient from "../../services/apiService";
+import { ProductService } from "../../services/ProductService";
 
 onMounted(() => {
   // ProductService.getProducts().then((data) => (listdata.value = data));
