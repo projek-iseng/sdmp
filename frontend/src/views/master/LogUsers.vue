@@ -2,114 +2,101 @@
   <div>
     <div class="card">
       <!-- Tambah Data -->
-      <Toolbar class="mb-4">
-        <template #start>
-          <Button
-            label="New"
-            icon="pi pi-plus"
-            severity="success"
-            class="mr-2"
-            @click="openNew"
-          />
-          <Button
-            label="Delete"
-            icon="pi pi-trash"
-            severity="danger"
-            @click="confirmDeleteSelected"
-            :disabled="!selectedProducts || !selectedProducts.length"
-          />
-        </template>
-
-        <!-- Hapus Data -->
-        <template #end>
-          <FileUpload
-            mode="basic"
-            accept="image/*"
-            :maxFileSize="1000000"
-            label="Import"
-            chooseLabel="Import"
-            class="mr-2 inline-block"
-          />
-          <Button
-            label="Export"
-            icon="pi pi-upload"
-            severity="help"
-            @click="exportCSV($event)"
-          />
-        </template>
-      </Toolbar>
-
      <DataTable
-      ref="dt"
-      :value="listdata"
-      v-model:selection="selectedProducts"
-      dataKey="id"
-      :first="first.value"
-      @page="onPageChange"
-      :paginator="true"
-      :rows="10"
-      :filters="filters"
-      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :rowsPerPageOptions="[5, 10, 25]"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-    >
-      <template #header>
-        <div class="flex flex-wrap gap-2 align-items-center justify-content-between">
-          <h4 class="m-0">Log Pegawai dan Aktifitas Users</h4>
-          <IconField iconPosition="left">
-            <InputIcon>
-              <i class="pi pi-search" />
-            </InputIcon>
-            <InputText v-model="filters['global'].value" placeholder="Search..." />
-          </IconField>
-        </div>
-      </template>
-
-      <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-      <Column 
-        header="No" 
-        style="width: 5rem;" 
+        ref="dt"
+        :value="listdata"
+        v-model:selection="selectedProducts"
+        dataKey="id"
+        :first="first.value"
+        @page="onPageChange"
+        :paginator="true"
+        :rows="10"
+        :filters="filters"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+        :rowsPerPageOptions="[5, 10, 25]"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
       >
-        <template #body="slotProps">
-          {{ slotProps.index + first + 1 }}
+        <!-- Header Slot -->
+        <template #header>
+          <div class="flex flex-wrap gap-2 align-items-center justify-content-between">
+            <div>
+              <IconField iconPosition="left">
+                <InputIcon>
+                  <i class="pi pi-search" />
+                </InputIcon>
+                <InputText v-model="filters['global'].value" placeholder="Search..." />
+              </IconField>
+            </div>
+            <div class="m-0">
+              <Button
+                label="Excel"
+                icon="pi pi-upload"
+                severity="help"
+                @click="exportCSV($event)"
+              />
+            </div>
+          </div>
         </template>
-      </Column>
-      <Column field="namaPegawai" header="Nama Lengkap" sortable style="min-width: 12rem"></Column>
-      <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
-      <Column header="Image" >
-        <template #body="slotProps" >
-          <img
-            :src="slotProps.data.foto"
-            :alt="slotProps.data.namaPegawai"
-            class="border-round"
-            style="width: 100px;height: 100px;object-fit: cover;"
-          />
+
+        <!-- Empty Slot -->
+        <template #empty>
+          <div class="text-center">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="No Data Available"
+              class="block mx-auto"
+            />
+            <p class="mt-3 text-gray-500">Data tidak ditemukan.</p>
+          </div>
         </template>
-      </Column>
-      <Column field="noTelepon" header="No Telepon" sortable style="min-width: 8rem"></Column>
-      <Column field="tglLahir" header="Tgl Lahir" sortable style="min-width: 10rem"></Column>
-      <Column field="tglGabung" header="Tgl Gabung" sortable style="min-width: 10rem"></Column>
-      <Column field="namaJabatan" header="Jabatan" sortable style="min-width: 12rem"></Column>
-      <Column field="namaDepartemen" header="Departemen" sortable style="min-width: 12rem"></Column>
-      <Column :exportable="false" style="min-width: 8rem">
-        <template #body="slotProps">
-          <Button
-            icon="pi pi-pencil"
-            outlined
-            rounded
-            class="mr-2"
-            @click="editProduct(slotProps.data)"
-          />
-          <Button
-            icon="pi pi-trash"
-            outlined
-            rounded
-            severity="danger"
-            @click="confirmDeleteProduct(slotProps.data)"
-          />
-        </template>
-      </Column>
-    </DataTable>
+
+        <!-- Kolom Data -->
+        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+        <Column 
+          header="No" 
+          style="width: 5rem;" 
+        >
+          <template #body="slotProps">
+            {{ slotProps.index + first + 1 }}
+          </template>
+        </Column>
+        <Column field="namaPegawai" header="Nama Lengkap" sortable style="min-width: 12rem"></Column>
+        <Column field="email" header="Email" sortable style="min-width: 16rem"></Column>
+        <Column header="Image">
+          <template #body="slotProps">
+            <img
+              :src="slotProps.data.foto"
+              :alt="slotProps.data.namaPegawai"
+              class="border-round"
+              style="width: 100px; height: 100px; object-fit: cover;"
+            />
+          </template>
+        </Column>
+        <Column field="noTelepon" header="No Telepon" sortable style="min-width: 8rem"></Column>
+        <Column field="tglLahir" header="Tgl Lahir" sortable style="min-width: 10rem"></Column>
+        <Column field="tglGabung" header="Tgl Gabung" sortable style="min-width: 10rem"></Column>
+        <Column field="namaJabatan" header="Jabatan" sortable style="min-width: 12rem"></Column>
+        <Column field="namaDepartemen" header="Departemen" sortable style="min-width: 12rem"></Column>
+        <Column :exportable="false" style="min-width: 8rem">
+          <template #body="slotProps">
+            <Button
+              icon="pi pi-pencil"
+              outlined
+              rounded
+              class="mr-2"
+              @click="editProduct(slotProps.data)"
+            />
+            <Button
+              icon="pi pi-trash"
+              outlined
+              rounded
+              severity="danger"
+              @click="confirmDeleteProduct(slotProps.data)"
+            />
+          </template>
+        </Column>
+      </DataTable>
+
     </div>
 
     <!-- CREATE DATA -->
