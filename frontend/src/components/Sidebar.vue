@@ -202,11 +202,14 @@
         }"
       >
         <div class="main-content">
-          <h1>Konten Utama</h1>
+          <!-- <h1>Konten Utama</h1>
           <p>
             Ini adalah contoh konten utama yang akan bergeser ke kanan ketika
             sidebar muncul.
-          </p>
+          </p> -->
+          <div>
+            <router-view :isSidebarOpen="isSidebarOpen" />
+          </div>
         </div>
       </div>
     </div>
