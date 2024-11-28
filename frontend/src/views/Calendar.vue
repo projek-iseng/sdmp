@@ -1,43 +1,77 @@
 <template>
-  <h1>Calender Pegawai</h1>
+  <h1>Calendar Pegawai</h1>
   <div id="app">
-    <div class="calendar-container">
-      <div class="calendar-header">
-        <button @click="prevMonth">&lt;</button>
-        <h2>{{ currentMonthName }} {{ currentYear }}</h2>
-        <button @click="nextMonth">&gt;</button>
+    <div class="grid-container">
+      <!-- Calendar Container -->
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button @click="prevMonth">&lt;</button>
+          <h2>{{ currentMonthName }} {{ currentYear }}</h2>
+          <button @click="nextMonth">&gt;</button>
+        </div>
+        <table class="calendar">
+          <thead>
+            <tr>
+              <th v-for="day in daysOfWeek" :key="day">{{ day }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(week, index) in weeks" :key="index">
+              <td
+                v-for="day in week"
+                :key="day.date"
+                :class="{
+                  'other-month': day.isOtherMonth,
+                  selected: day.isSelected,
+                  hovered: day.isHovered,
+                  'current-day': day.isCurrentDay,
+                }"
+                @mouseover="day.isHovered = true"
+                @mouseleave="day.isHovered = false"
+                @click="selectDay(day)"
+              >
+                {{ day.date }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <table class="calendar">
-        <thead>
-          <tr>
-            <th v-for="day in daysOfWeek" :key="day">{{ day }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(week, index) in weeks" :key="index">
-            <td
-              v-for="day in week"
-              :key="day.date"
-              :class="{
-                'other-month': day.isOtherMonth,
-                selected: day.isSelected,
-                hovered: day.isHovered,
-                'current-day': day.isCurrentDay,
-              }"
-              @mouseover="day.isHovered = true"
-              @mouseleave="day.isHovered = false"
-              @click="selectDay(day)"
-            >
-              {{ day.date }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Rekap Jumlah Pegawai Table -->
+      <div class="table-container">
+        <h2>Rekap Jumlah Pegawai</h2>
+        <DataTable
+          :value="rekapJumlahPegawai"
+          paginator
+          :rows="5"
+          :rowsPerPageOptions="[5, 10, 20, 50]"
+          tableStyle="min-width: 50rem"
+        >
+          <Column field="no" header="No" style="width: 15%"></Column>
+          <Column
+            field="departemen"
+            header="Departemen"
+            style="width: 50%"
+          ></Column>
+          <Column field="jumlah" header="Jumlah" style="width: 35%"></Column>
+        </DataTable>
+      </div>
     </div>
-    <h1>----</h1>
+
+    <!-- List Data Pegawai Table -->
     <div class="card">
-      <h1>List Data Pegawai</h1>
+      <h2>Data Izin Pegawai</h2>
+      <!-- <Button
+        label="Export"
+        icon="pi pi-upload"
+        severity="help"
+        @click="exportCSV($event)"
+      /> -->
       <DataTable
+        reff="dt"
         :value="customers"
         paginator
         :rows="5"
@@ -61,12 +95,30 @@
           style="width: 15%"
         ></Column>
         <Column
-          field="blank"
+          field="tglPengajuan"
           header="Tgl Pengajuan"
           style="width: 15%"
         ></Column>
-        <Column field="blank" header="Keterangan" style="width: 15%"></Column>
-        <Column field="blank" header="Detail" style="width: 15%"></Column>
+        <Column
+          field="keterangan"
+          header="Keterangan"
+          style="width: 15%"
+        ></Column>
+        <Column field="detail" header="Detail" style="width: 15%"></Column>
+        <Column header="Status" style="width: 15%">
+          <template #body="slotProps">
+            <span
+              :class="[
+                'status-tag',
+                { success: slotProps.data.status === 'ACC' },
+                { warning: slotProps.data.status === 'Pending' },
+                { danger: slotProps.data.status === 'Rejected' },
+              ]"
+            >
+              {{ slotProps.data.status || "Pending" }}
+            </span>
+          </template>
+        </Column>
       </DataTable>
     </div>
   </div>
@@ -74,26 +126,25 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { FilterMatchMode } from "primevue/api";
-import { useToast } from "primevue/usetoast";
-import { ProductService } from "../services/ProductService";
-import apiClient from "../services/apiService";
 
+// Kalender data
+const dt = ref();
 const currentDate = new Date();
 const currentMonth = ref(currentDate.getMonth());
 const currentYear = ref(currentDate.getFullYear());
 const weeks = ref([]);
-
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const daysOfWeek = [
+  "Minggu",
+  "Senin",
+  "Selasa",
+  "Rabu",
+  "Kamis",
+  "Jumat",
+  "Sabtu",
+];
 const currentMonthName = ref(
   currentDate.toLocaleString("default", { month: "long" })
 );
-
-const getDaysInMonth = () =>
-  new Date(currentYear.value, currentMonth.value + 1, 0).getDate();
-const getFirstDayOfMonth = () =>
-  new Date(currentYear.value, currentMonth.value, 1).getDay();
-const getCurrentDay = () => new Date().getDate();
 
 const prevMonth = () => {
   if (currentMonth.value === 0) {
@@ -116,9 +167,17 @@ const nextMonth = () => {
 };
 
 const updateCalendar = () => {
-  const daysInMonth = getDaysInMonth();
-  const firstDayOfMonth = getFirstDayOfMonth();
-  const currentDay = getCurrentDay();
+  const daysInMonth = new Date(
+    currentYear.value,
+    currentMonth.value + 1,
+    0
+  ).getDate();
+  const firstDayOfMonth = new Date(
+    currentYear.value,
+    currentMonth.value,
+    1
+  ).getDay();
+  const currentDay = new Date().getDate();
 
   weeks.value = [];
   let week = [];
@@ -156,84 +215,99 @@ const selectDay = (day) => {
   if (!day.isOtherMonth) {
     day.isSelected = !day.isSelected;
   }
-
-  const pegawaiList = ref([
-    { nama: "John Doe", posisi: "Manager", jadwal: "Senin-Jumat" },
-    { nama: "Jane Smith", posisi: "Staff", jadwal: "Selasa-Kamis" },
-    { nama: "Mike Johnson", posisi: "IT Support", jadwal: "Rabu-Sabtu" },
-  ]);
 };
+
+// Data Pegawai
+const rekapJumlahPegawai = ref([
+  { no: 1, departemen: "HRD", jumlah: 5 },
+  { no: 2, departemen: "IT", jumlah: 8 },
+  { no: 3, departemen: "Finance", jumlah: 3 },
+  { no: 4, departemen: "Marketing", jumlah: 4 },
+  { no: 5, departemen: "Sales", jumlah: 7 },
+]);
+
+const customers = ref([
+  {
+    idPegawai: "001",
+    namePegawai: "Piyo Aswandi",
+    jabatan: "Manager",
+    departemen: "HRD",
+    tglPengajuan: "2024-11-01",
+    keterangan: "Cuti",
+    detail: "Cuti 2 hari",
+    status: "ACC",
+  },
+  {
+    idPegawai: "002",
+    namePegawai: "Azhar As Rahmatulloh",
+    jabatan: "Staff",
+    departemen: "IT",
+    tglPengajuan: "2024-11-02",
+    keterangan: "Izin Sakit",
+    detail: "Sakit flu",
+    status: "Pending",
+  },
+  {
+    idPegawai: "003",
+    namePegawai: "Testing",
+    jabatan: "Staff",
+    departemen: "IT",
+    tglPengajuan: "2024-11-02",
+    keterangan: "Izin Sakit",
+    detail: "Sakit flu",
+    status: "Rejected",
+  },
+]);
+
+// const exportCSV = () => {
+//   dt.customers.exportCSV();
+// };
 
 onMounted(() => {
   updateCalendar();
 });
 </script>
 
-<style scoped>
-.main-container {
-  display: flex; /* Atur sebagai Flexbox */
-  gap: 20px; /* Beri jarak antar elemen */
-  align-items: flex-start; /* Atur elemen sejajar dari atas */
-}
-
-.calendar-container {
-  background-color: #f0f0f0; /* Warna abu-abu */
-  flex: 1;
-}
-
-.table-container {
-  background-color: #d0f0d0; /* Warna hijau muda */
-  flex: 1;
-}
-
-.pegawai-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.pegawai-table th,
-.pegawai-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-.pegawai-table th {
-  background-color: #333;
+<style>
+.status-tag {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
   color: white;
 }
 
-.pegawai-table td {
-  background-color: #f9f9f9;
+.status-tag.success {
+  background-color: #4caf50; /* Hijau untuk ACC */
 }
 
-.pegawai-table tr:hover {
-  background-color: #f1f1f1;
-}
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.status-tag.warning {
+  background-color: #ff9800; /* Oranye untuk Pending */
 }
 
-body {
-  font-family: "Arial", sans-serif;
-  background-color: #080808;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  color: #333; /* Warna teks utama */
+.status-tag.danger {
+  background-color: #f44336; /* Merah untuk Rejected */
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 20px;
 }
 
 .calendar-container {
-  width: 90%;
-  max-width: 800px;
-  background: #fff;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-top: 40px;
+  padding: 20px;
+}
+
+.table-container {
+  padding: 20px;
+}
+
+.divider {
+  width: 1px;
+  background-color: #ccc;
+  height: 100%;
 }
 
 .calendar-header {
@@ -241,8 +315,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #333; /* Latar belakang gelap */
-  color: white; /* Teks putih */
+  color: white;
   font-size: 18px;
 }
 
@@ -268,52 +341,45 @@ body {
 .calendar td {
   text-align: center;
   padding: 15px;
-  border: 1px solid #ddd; /* Garis pemisah abu-abu */
+  border: 1px solid #ddd;
   font-size: 14px;
-  color: white; /* Teks putih di seluruh tabel */
+  color: white;
 }
 
 .calendar th {
-  background-color: #222; /* Latar belakang gelap untuk header */
+  background-color: #222;
   font-weight: bold;
 }
 
 .calendar td {
-  background-color: #000; /* Latar belakang hitam untuk tanggal */
+  background-color: #000;
   transition: background-color 0.3s, transform 0.3s;
   cursor: pointer;
 }
 
 .calendar td:hover {
-  background-color: #070707; /* Efek hover abu-abu */
+  background-color: #070707;
   transform: scale(1.1);
 }
 
 .calendar td.other-month {
-  color: #aaa; /* Tanggal di luar bulan aktif lebih pudar */
-}
-
-.calendar td.selected {
-  background-color: #333; /* Latar belakang hitam untuk tanggal yang dipilih */
-  color: white; /* Teks putih */
-  border-radius: 50%; /* Membuat lingkaran */
+  color: #aaa;
 }
 
 .calendar td.hovered {
-  background-color: #d0d0d0; /* Warna abu-abu lebih terang saat hover */
+  background-color: #d0d0d0;
 }
 
 .calendar td.current-day {
-  color: red; /* Teks merah untuk hari ini */
-  background-color: #000; /* Menghilangkan latar belakang */
-  border-radius: 0; /* Menghilangkan efek bulat */
-  font-weight: bold; /* Membuat teks hari ini tebal */
+  color: red;
+  background-color: #000;
+  border-radius: 0;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {
-  .calendar-container {
-    width: 100%;
-    margin: 0;
+  .grid-container {
+    grid-template-columns: 1fr;
   }
 
   .calendar-header h2 {
@@ -327,5 +393,3 @@ body {
   }
 }
 </style>
-
-../services/ProductService
