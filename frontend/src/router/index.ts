@@ -17,12 +17,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "home" */ "../views/PegawaiDashboard.vue"),
   },
-  // {
-  //   path: "/calendar",
-  //   name: "calendar",
-  //   component: () =>
-  //     import(/* webpackChunkName: "home" */ "../views/Calendar.vue"),
-  // },
+  {
+    path: "/calendar",
+    name: "calendar",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/Calendar.vue"),
+  },
   {
     path: "/auth",
     name: "auth",

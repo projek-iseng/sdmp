@@ -1,5 +1,5 @@
 <template>
-  <h1>Kalender</h1>
+  <h1>Calender Pegawai</h1>
   <div id="app">
     <div class="calendar-container">
       <div class="calendar-header">
@@ -34,6 +34,41 @@
         </tbody>
       </table>
     </div>
+    <h1>----</h1>
+    <div class="card">
+      <h1>List Data Pegawai</h1>
+      <DataTable
+        :value="customers"
+        paginator
+        :rows="5"
+        :rowsPerPageOptions="[5, 10, 20, 50]"
+        tableStyle="min-width: 50rem"
+      >
+        <Column
+          field="idPegawai"
+          header="ID Pegawai"
+          style="width: 15%"
+        ></Column>
+        <Column
+          field="namePegawai"
+          header="Nama Pegawai"
+          style="width: 15%"
+        ></Column>
+        <Column field="jabatan" header="Jabatan" style="width: 15%"></Column>
+        <Column
+          field="departemen"
+          header="Departemen"
+          style="width: 15%"
+        ></Column>
+        <Column
+          field="blank"
+          header="Tgl Pengajuan"
+          style="width: 15%"
+        ></Column>
+        <Column field="blank" header="Keterangan" style="width: 15%"></Column>
+        <Column field="blank" header="Detail" style="width: 15%"></Column>
+      </DataTable>
+    </div>
   </div>
 </template>
 
@@ -41,8 +76,8 @@
 import { ref, onMounted } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
-import { ProductService } from "../../services/ProductService";
-import apiClient from "../../services/apiService";
+import { ProductService } from "../services/ProductService";
+import apiClient from "../services/apiService";
 
 const currentDate = new Date();
 const currentMonth = ref(currentDate.getMonth());
@@ -121,6 +156,12 @@ const selectDay = (day) => {
   if (!day.isOtherMonth) {
     day.isSelected = !day.isSelected;
   }
+
+  const pegawaiList = ref([
+    { nama: "John Doe", posisi: "Manager", jadwal: "Senin-Jumat" },
+    { nama: "Jane Smith", posisi: "Staff", jadwal: "Selasa-Kamis" },
+    { nama: "Mike Johnson", posisi: "IT Support", jadwal: "Rabu-Sabtu" },
+  ]);
 };
 
 onMounted(() => {
@@ -129,6 +170,46 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.main-container {
+  display: flex; /* Atur sebagai Flexbox */
+  gap: 20px; /* Beri jarak antar elemen */
+  align-items: flex-start; /* Atur elemen sejajar dari atas */
+}
+
+.calendar-container {
+  background-color: #f0f0f0; /* Warna abu-abu */
+  flex: 1;
+}
+
+.table-container {
+  background-color: #d0f0d0; /* Warna hijau muda */
+  flex: 1;
+}
+
+.pegawai-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.pegawai-table th,
+.pegawai-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.pegawai-table th {
+  background-color: #333;
+  color: white;
+}
+
+.pegawai-table td {
+  background-color: #f9f9f9;
+}
+
+.pegawai-table tr:hover {
+  background-color: #f1f1f1;
+}
 * {
   box-sizing: border-box;
   margin: 0;
