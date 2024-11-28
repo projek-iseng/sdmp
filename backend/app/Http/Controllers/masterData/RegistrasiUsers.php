@@ -2,33 +2,48 @@
 
 namespace App\Http\Controllers\masterData;
 
+use App\Helpers\enkripsi_helpers;
 use App\Http\Controllers\Controller;
 use App\Models\masterData\Users;
+use App\Models\PegawaiModel;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class RegistrasiUsers extends Controller
 {
-    public function register(Request $request)
-    {
-        // masih belum bisa 
-        $email = $request->input('email');
-        $googleApiKey = env('GOOGLE_API_KEY');
-        $response = Http::get("https://people.googleapis.com/v1/people:searchContacts", [
-            'query' => $email,
-            'key' => $googleApiKey,
-        ]);
-        if ($response->failed() || empty($response->json('results'))) {
-            return response()->json(['message' => 'Email tidak terdaftar di Google'], 400);
-        }
-        $googleToken = $response->json('results.0.token');
-        $user = Users::create([
-            'name' => $request->input('username'),
-            'email' => $email,
-            'password' => bcrypt($request->input('password')),
-            'remember_token' => $googleToken,
-        ]);
+    public function store(Request $request)
+{
+    $validated = $request->validate([
+        'namaPegawai' => 'required|string|max:255',
+        'emailPegawai' => 'required|email|unique:users,email',
+        'usernamePegawai' => 'required|string|max:255|unique:users,username',
+    ]);
 
-        return response()->json(['message' => 'Registrasi berhasil', 'user' => $user], 201);
-    }
+    $encryptedPassword = enkripsi_helpers::customEncryptPassword($request->usernamePegawai);
+
+    $registrasi = new Users();
+    $registrasi->name = $validated['namaPegawai'];
+    $registrasi->email = $validated['emailPegawai'];
+    $registrasi->username = $validated['usernamePegawai'];
+    $registrasi->password = $encryptedPassword;
+    $registrasi->save();
+
+    $pegawai = new PegawaiModel();
+    $pegawai->namaPegawai   = $request->namaPegawai;
+    $pegawai->email         = $request->emailPGW;
+    $pegawai->noTelepon     = $request->noTeleponPGW;
+    $pegawai->alamat        = $request->alamatPGW;
+    $pegawai->tglGabung     = Carbon::now();
+    $pegawai->jabatan_id    = $request->jabatanPGW;
+    $pegawai->statusenable  = true;
+    $pegawai->departemen_id = $request->departemenPGW;
+    $pegawai->save();
+
+    return response()->json([
+        'message' => 'User registered successfully',
+        'user' => $registrasi,
+    ]);
+}
 }

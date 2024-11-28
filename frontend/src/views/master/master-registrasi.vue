@@ -12,14 +12,72 @@ const loading = ref(false)
 const submitted = ref(false);
 const productDialog = ref(false);
 const tglLahir = ref(null);
+const dataBatch = ref([
+  {
+    namaPegawai: "",
+    email: "",
+    username: "",
+    password: "",
+  },
+]);
+
+const addUser = () => {
+  dataBatch.value.push({
+    namaPegawai: "",
+    email: "",
+    username: "",
+    password: "",
+  });
+};
+const removeUser = (index) => {
+  dataBatch.value.splice(index, 1);
+};
+
 
 
 const dialogCreate  = async ()=> {
     productDialog.value = true
 }
-const saveUsers = async ()=> {
-    productDialog.value = false
-}
+const saveRegistrasiBatch = async () => {
+  submitted.value = true;
+
+  // Validasi form
+  const isValid = dataBatch.value.every(
+    (user) =>
+      user.namaPegawai &&
+      user.email &&
+      user.username &&
+      user.password
+  );
+
+  if (!isValid) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Pastikan semua data sudah terisi.",
+    });
+    return;
+  }
+
+  try {
+    const response = await apiClient.post("/api/master-data/registrasiUsers", {
+      users: dataBatch.value,
+    });
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: `${dataBatch.value.length} User berhasil diregistrasi.`,
+    });
+    hideDialog();
+  } catch (error) {
+    console.error("Gagal Registrasi Batch", error);
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: "Gagal melakukan registrasi batch.",
+    });
+  }
+};
 
 const hideDialog = () => {
   productDialog.value = false;
@@ -135,65 +193,92 @@ onMounted(() => {
             </SplitterPanel>
         </Splitter>
         <Dialog
-      v-model:visible="productDialog"
-      :style="{ width: '1050px' }"
-      header="Nama Pegawai"
-      :modal="true"
-      class="p-fluid"
-    >
-      <div class="formgrid grid">
-        <div class="field col">
-          <label for="name">Nama Lengkap</label>
-          <InputText
-            id="name"
-            v-model.trim="data.namaPegawai "
-            required="true"
-            autofocus
-            autocomplete="off"
-            :invalid="submitted && !data.namaPegawai"
-          />
-          <small class="p-error" v-if="submitted && !data.namaPegawai"
-            >Nama Lengkap diperlukan.</small
-          >
-        </div>
-        <div class="field col">
-          <label for="email">Email</label>
-          <InputText
-            id="email"
-            v-model="data.email"
-            required="true"
-            autocomplete="off"
-            :invalid="submitted && !data.email"
-          />
-          <small class="p-error" v-if="submitted && !data.email">Email diperlukan.</small>
-        </div>
-        <div class="field col">
-          <label for="noHp">No Handphone</label>
-          <InputText
-            id="noHp"
-            v-model="data.noHp"
-            required="true"
-            autocomplete="off"
-            :invalid="submitted && !data.noHp"
-          />
-          <small class="p-error" v-if="submitted && !data.noHp"
-            >No Handphone diperlukan.</small
-          >
-        </div>
+  v-model:visible="productDialog"
+  :style="{ width: '1050px' }"
+  header="Registrasi Banyak Pegawai"
+  :modal="true"
+  class="p-fluid"
+>
+  <div v-for="(user, index) in dataBatch" :key="index" >
+    <div class="flex align-items-center justify-content-between">
+      <div>
+      <h3>User {{ index + 1 }}</h3>
       </div>
-      <div class="field">
-        <label for="alamat">Alamat</label>
-        <Textarea
-          id="alamat"
-          v-model.trim="data.alamat"
-          rows="5"
-          cols="30"
-          autocomplete="off"
-          :invalid="submitted && !data.alamat"
+      <div>
+        <Button
+          label="Cencel"
+          icon="pi pi-trash"
+          class="p-button-danger"
+          text
+          @click="removeUser(index)"
         />
-        <small class="p-error" v-if="submitted && !data.alamat">Alamat diperlukan.</small>
       </div>
-      <div class="formgrid grid">
+    </div>
+    <div class="formgrid grid mb-3">
+      <div class="field col">
+        <label :for="'name' + index">Nama Lengkap</label>
+        <InputText
+          :id="'name' + index"
+          v-model.trim="user.namaPegawai"
+          required="true"
+          autocomplete="off"
+          :invalid="submitted && !user.namaPegawai"
+        />
+        <small class="p-error" v-if="submitted && !user.namaPegawai">
+          Nama Lengkap diperlukan.
+        </small>
+      </div>
+      <div class="field col">
+        <label :for="'email' + index">Email</label>
+        <InputText
+          :id="'email' + index"
+          v-model="user.email"
+          type="email"
+          required="true"
+          autocomplete="off"
+          :invalid="submitted && !user.email"
+        />
+        <small class="p-error" v-if="submitted && !user.email">Email diperlukan.</small>
+      </div>
+      <div class="field col">
+        <label :for="'username' + index">Username</label>
+        <InputText
+          :id="'username' + index"
+          v-model="user.username"
+          required="true"
+          autocomplete="off"
+          :invalid="submitted && !user.username"
+        />
+        <small class="p-error" v-if="submitted && !user.username">
+          Username diperlukan.
+        </small>
+      </div>
+      <div class="field col">
+        <label :for="'password' + index">Password</label>
+        <InputText
+          :id="'password' + index"
+          v-model="user.password"
+          type="password"
+          required="true"
+          autocomplete="off"
+          :invalid="submitted && !user.password"
+        />
+        <small class="p-error" v-if="submitted && !user.password">
+          Password diperlukan.
+        </small>
+      </div>
+      <!-- <div class="field col">
+      <label for="">Batal</label>
+      <Button
+        label="Cencel"
+        icon="pi pi-trash"
+        class="p-button-danger"
+        text
+        @click="removeUser(index)"
+      />
+      </div> -->
+    </div>
+    <div class="formgrid grid">
       <div class="field col">
         <label for="jabatan">Jabatan</label>
         <Dropdown
@@ -225,26 +310,17 @@ onMounted(() => {
         >
       </div>
       </div>
-      <div class="formgrid grid">
-        <div class="field col">
-            <label for="username">Username</label>
-           <FloatLabel>
-                <InputText autocomplete="off" id="username" v-model="data.username" />
-            </FloatLabel>
-        </div>
-        <div class="field col">
-            <label for="password">Password</label>
-           <FloatLabel>
-                <InputText autocomplete="off" id="password" v-model="data.password" />
-            </FloatLabel>
-        </div>
-      </div>
-      
-      <template #footer>
-        <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-        <Button label="Create" icon="pi pi-plus" text @click="saveUsers" />
-      </template>
-    </Dialog>
+    <hr/>
+  </div>
+  
+
+  <template #footer>
+    <Button label="Tambah User" icon="pi pi-plus" text @click="addUser" />
+    <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
+    <Button label="Create" icon="pi pi-check" text @click="saveRegistrasiBatch" />
+  </template>
+</Dialog>
+
     </div>
 </template>
  
