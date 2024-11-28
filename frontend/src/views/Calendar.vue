@@ -56,7 +56,11 @@
             header="Departemen"
             style="width: 50%"
           ></Column>
-          <Column field="jumlah" header="Jumlah" style="width: 35%"></Column>
+          <Column
+            field="jumlah"
+            header="Jumlah Pegawai"
+            style="width: 35%"
+          ></Column>
         </DataTable>
       </div>
     </div>
@@ -64,12 +68,12 @@
     <!-- List Data Pegawai Table -->
     <div class="card">
       <h2>Data Izin Pegawai</h2>
-      <!-- <Button
-        label="Export"
-        icon="pi pi-upload"
-        severity="help"
-        @click="exportCSV($event)"
-      /> -->
+      <Button
+        label="Export CSV"
+        icon="pi pi-download"
+        severity="success"
+        @click="exportCSV"
+      />
       <DataTable
         reff="dt"
         :value="customers"
@@ -259,9 +263,45 @@ const customers = ref([
   },
 ]);
 
-// const exportCSV = () => {
-//   dt.customers.exportCSV();
-// };
+// Fungsi untuk mengekspor data ke CSV
+const exportCSV = () => {
+  const csvRows = [];
+  const headers = [
+    "ID Pegawai",
+    "Nama Pegawai",
+    "Jabatan",
+    "Departemen",
+    "Tgl Pengajuan",
+    "Keterangan",
+    "Detail",
+    "Status",
+  ];
+  csvRows.push(headers.join(","));
+
+  customers.value.forEach((customer) => {
+    const row = [
+      customer.idPegawai,
+      customer.namePegawai,
+      customer.jabatan,
+      customer.departemen,
+      customer.tglPengajuan,
+      customer.keterangan,
+      customer.detail,
+      customer.status,
+    ];
+    csvRows.push(row.join(","));
+  });
+
+  const csvString = csvRows.join("\n");
+
+  // Create a downloadable link
+  const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", "data_izin_pegawai.csv");
+  link.click();
+};
 
 onMounted(() => {
   updateCalendar();
@@ -280,15 +320,15 @@ onMounted(() => {
 }
 
 .status-tag.success {
-  background-color: #4caf50; /* Hijau untuk ACC */
+  background-color: #4caf50;
 }
 
 .status-tag.warning {
-  background-color: #ff9800; /* Oranye untuk Pending */
+  background-color: #ff9800;
 }
 
 .status-tag.danger {
-  background-color: #f44336; /* Merah untuk Rejected */
+  background-color: #f44336;
 }
 .grid-container {
   display: grid;
