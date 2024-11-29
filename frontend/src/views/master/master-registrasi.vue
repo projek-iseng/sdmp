@@ -262,6 +262,9 @@ onMounted(() => {
       :modal="true"
       class="p-fluid"
     >
+    <div class="flex align-items-end justify-content-end rounded" >
+      <input type="file" @change="handleFileUpload" accept=".xlsx, .xls, .csv" />
+    </div>
       <div v-for="(user, index) in dataBatch" :key="index">
         <div class="flex align-items-center justify-content-between">
           <div>
@@ -269,7 +272,7 @@ onMounted(() => {
           </div>
           <div class="flex align-items-center justify-content-between">
             <div>
-              <input type="file" @change="handleFileUpload" accept=".xlsx, .xls, .csv" />
+             
             </div>
             <div >
             <Button
