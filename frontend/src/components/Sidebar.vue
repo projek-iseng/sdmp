@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-close': !isSidebarOpen }"
+    :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-close': !isSidebarOpen }" 
   >
     <div class="card flex justify-content-center">
       <Sidebar v-model:visible="isSidebarOpen" class="custom-sidebar">
@@ -193,7 +193,7 @@
           </div>
         </template>
       </Sidebar>
-      <Button class="button-wrapper" icon="pi pi-bars" @click="toggleSidebar" />
+      <Button  v-if="$route.path !== '/auth'" class="button-wrapper" icon="pi pi-bars" @click="toggleSidebar" />
       <!-- Konten Utama -->
       <div
         :class="{
@@ -217,7 +217,17 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits,watch } from "vue";
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const isAuthPage = ref(route.path === '/auth');
+
+watch(
+  () => route.path,
+  (newPath) => {
+    isAuthPage.value = newPath === '/auth';
+  }
+);
 
 const isSidebarOpen = ref(false); // State lokal sidebar
 const emit = defineEmits(["update:isSidebarOpen"]); // Untuk mengirimkan event ke parent

@@ -73,7 +73,7 @@ import imgLogo from "../../../public/game.svg";
   align-items: center;
 }
 .splitter-custom {
-  height: 98vh;
+  height: 95vh;
   border: none;
 }
 .splitter-custom .p-splitter-gutter {
