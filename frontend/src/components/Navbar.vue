@@ -1,24 +1,43 @@
 <template>
   <div class="card">
     <Menubar :model="items">
-      <template #start>
-
-      </template>
+      <template #start> </template>
       <template #item="{ item, props, hasSubmenu, root }">
-        <a v-ripple class="flex align-items-center" v-bind="props.action" style="padding-left:60px">
+        <a
+          v-ripple
+          class="flex align-items-center"
+          v-bind="props.action"
+          style="padding-left: 60px"
+        >
           <span :class="item.icon" />
           <span class="ml-2">{{ item.label }}</span>
-          <Badge v-if="item.badge" :class="{ 'ml-auto': !root, 'ml-2': root }" :value="item.badge" />
-          <span v-if="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{
-            item.shortcut
-          }}</span>
-          <i v-if="hasSubmenu"
-            :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"></i>
+          <Badge
+            v-if="item.badge"
+            :class="{ 'ml-auto': !root, 'ml-2': root }"
+            :value="item.badge"
+          />
+          <span
+            v-if="item.shortcut"
+            class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+            >{{ item.shortcut }}</span
+          >
+          <i
+            v-if="hasSubmenu"
+            :class="[
+              'pi pi-angle-down',
+              { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root },
+            ]"
+          ></i>
         </a>
       </template>
       <template #end>
         <div class="flex align-items-center gap-2">
-          <InputText placeholder="Search" type="text" class="w-8rem sm:w-auto" />
+          <ToggleButton v-model="checked" onLabel="Light" offLabel="Dark" />
+          <InputText
+            placeholder="Search"
+            type="text"
+            class="w-8rem sm:w-auto"
+          />
           <div class="dropdown-container">
             <Button class="custom-split-button" @click="toggleDropdown">
               <img :src="getImage()" alt="Role Icon" class="button-image" />
@@ -41,23 +60,22 @@
 import { ref } from "vue";
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
-import spongebobImg from '../assets/sepongebob.png';
-import { useRouter } from 'vue-router';
+import spongebobImg from "../assets/sepongebob.png";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const role = 'director';
+const role = "director";
 const isDropdownVisible = ref(false);
+const checked = ref(true);
 
-function navigateToPage() {
-
-}
+function navigateToPage() {}
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
 }
 
 function handleAction(action) {
-  if (action === 'auth' || action === 'profile' || action === 'settings') {
+  if (action === "auth" || action === "profile" || action === "settings") {
     router.push({ name: action });
   } else {
     console.error(`Route "${action}" tidak ditemukan!`);
@@ -65,8 +83,6 @@ function handleAction(action) {
 
   isDropdownVisible.value = false;
 }
-
-
 
 const jabatanDanDepartemenDataPegawai = async () => {
   try {
@@ -80,9 +96,8 @@ const jabatanDanDepartemenDataPegawai = async () => {
   }
 };
 
-
 function getImage() {
-  if (role === 'director') {
+  if (role === "director") {
     return spongebobImg;
   }
   //   } else if (role === 'hrd') {
@@ -96,58 +111,58 @@ function getImage() {
 
 const items = ref([
   {
-    label: 'Home',
-    icon: 'pi pi-home'
+    label: "Home",
+    icon: "pi pi-home",
   },
   {
-    label: 'Features',
-    icon: 'pi pi-star'
+    label: "Features",
+    icon: "pi pi-star",
   },
   {
-    label: 'Projects',
-    icon: 'pi pi-search',
+    label: "Projects",
+    icon: "pi pi-search",
     items: [
       {
-        label: 'Core',
-        icon: 'pi pi-bolt',
-        shortcut: '⌘+S'
+        label: "Core",
+        icon: "pi pi-bolt",
+        shortcut: "⌘+S",
       },
       {
-        label: 'Blocks',
-        icon: 'pi pi-server',
-        shortcut: '⌘+B'
+        label: "Blocks",
+        icon: "pi pi-server",
+        shortcut: "⌘+B",
       },
       {
-        label: 'UI Kit',
-        icon: 'pi pi-pencil',
-        shortcut: '⌘+U'
+        label: "UI Kit",
+        icon: "pi pi-pencil",
+        shortcut: "⌘+U",
       },
       {
-        separator: true
+        separator: true,
       },
       {
-        label: 'Templates',
-        icon: 'pi pi-palette',
+        label: "Templates",
+        icon: "pi pi-palette",
         items: [
           {
-            label: 'Apollo',
-            icon: 'pi pi-palette',
-            badge: 2
+            label: "Apollo",
+            icon: "pi pi-palette",
+            badge: 2,
           },
           {
-            label: 'Ultima',
-            icon: 'pi pi-palette',
-            badge: 3
-          }
-        ]
-      }
-    ]
+            label: "Ultima",
+            icon: "pi pi-palette",
+            badge: 3,
+          },
+        ],
+      },
+    ],
   },
   {
-    label: 'Contact',
-    icon: 'pi pi-envelope',
-    badge: 3
-  }
+    label: "Contact",
+    icon: "pi pi-envelope",
+    badge: 3,
+  },
 ]);
 </script>
 <style scoped>

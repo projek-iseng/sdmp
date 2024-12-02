@@ -109,7 +109,7 @@
           style="width: 15%"
         ></Column>
         <Column field="detail" header="Detail" style="width: 15%"></Column>
-        <Column header="Status" style="width: 15%">
+        <Column header="Status" style="width: 10%">
           <template #body="slotProps">
             <span
               :class="[
@@ -121,6 +121,18 @@
             >
               {{ slotProps.data.status || "Pending" }}
             </span>
+          </template>
+        </Column>
+        <Column header="Dokumentasi" style="width: 10%">
+          <template #body="rowData">
+            <div style="display: flex; align-items: center">
+              <i
+                class="pi pi-file"
+                style="cursor: pointer; margin-right: 5px"
+                @click="showDocument(rowData)"
+              ></i>
+              <span>{{ rowData.documentName }}</span>
+            </div>
           </template>
         </Column>
       </DataTable>
@@ -355,14 +367,16 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  color: white;
+  background-color: #0c0c0c;
+  color: rgb(231, 228, 228);
   font-size: 18px;
 }
 
 .calendar-header button {
   background: none;
   border: none;
-  color: white;
+  background-color: #0a0a0a;
+  color: rgb(233, 219, 219);
   font-size: 20px;
   cursor: pointer;
   padding: 5px;
