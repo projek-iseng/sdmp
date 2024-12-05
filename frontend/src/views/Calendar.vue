@@ -85,30 +85,42 @@
         <Column
           field="idPegawai"
           header="ID Pegawai"
-          style="width: 15%"
+          style="width: 10%"
         ></Column>
         <Column
           field="namePegawai"
           header="Nama Pegawai"
-          style="width: 15%"
+          style="width: 10%"
         ></Column>
-        <Column field="jabatan" header="Jabatan" style="width: 15%"></Column>
+        <Column field="jabatan" header="Jabatan" style="width: 10%"></Column>
         <Column
           field="departemen"
           header="Departemen"
-          style="width: 15%"
+          style="width: 10%"
         ></Column>
         <Column
           field="tglPengajuan"
           header="Tgl Pengajuan"
-          style="width: 15%"
+          style="width: 10%"
         ></Column>
         <Column
           field="keterangan"
           header="Keterangan"
-          style="width: 15%"
+          style="width: 10%"
         ></Column>
-        <Column field="detail" header="Detail" style="width: 15%"></Column>
+        <Column field="detail" header="Detail" style="width: 10%"></Column>
+        <Column header="Dokumentasi" style="width: 10%">
+          <template #body="rowData">
+            <div style="display: flex; align-items: center">
+              <i
+                class="pi pi-file"
+                style="cursor: pointer; margin-right: 5px"
+                @click="showDocument(rowData)"
+              ></i>
+              <span>{{ rowData.documentName }}</span>
+            </div>
+          </template>
+        </Column>
         <Column header="Status" style="width: 10%">
           <template #body="slotProps">
             <span
@@ -121,18 +133,6 @@
             >
               {{ slotProps.data.status || "Pending" }}
             </span>
-          </template>
-        </Column>
-        <Column header="Dokumentasi" style="width: 10%">
-          <template #body="rowData">
-            <div style="display: flex; align-items: center">
-              <i
-                class="pi pi-file"
-                style="cursor: pointer; margin-right: 5px"
-                @click="showDocument(rowData)"
-              ></i>
-              <span>{{ rowData.documentName }}</span>
-            </div>
           </template>
         </Column>
       </DataTable>
