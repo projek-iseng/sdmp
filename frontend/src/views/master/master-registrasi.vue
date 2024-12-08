@@ -15,35 +15,39 @@ const submitted = ref(false);
 const productDialog = ref(false);
 const tglLahir = ref(null);
 const toast = useToast();
+
+const fetchData = async () => {
+  try {
+    const response = await apiClient.get("/api/master-data/registrasiUsers");
+    conso
+    listdata.value = response.data; // Pastikan data yang diterima sesuai dengan format yang diharapkan
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+};
+
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
-
   const reader = new FileReader();
   reader.onload = (e) => {
     const data = e.target.result;
     const workbook = XLSX.read(data, { type: "binary" });
-
-    // Ambil sheet pertama
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-
-    // Konversi data sheet menjadi array
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-    // Menambahkan data ke dataBatch
     dataBatch.value = jsonData.map((row) => {
-      // Mencari value untuk jabatan dan departemen berdasarkan label
       const jabatan = jabatanData.value.find((item) => item.label === row['Jabatan']);
       const departemen = departemenData.value.find((item) => item.label === row['Departemen']);
-
       return {
         namaPegawai: row['Nama Lengkap'] || '',
         emailPegawai: row['Email'] || '',
         usernamePegawai: row['Username'] || '',
         passwordPegawai: row['Password'] || '',
-        departemenPegawai: departemen ? departemen.value : '',  // Menyimpan ID departemen
-        jabatanPegawai: jabatan ? jabatan.value : '',  // Menyimpan ID jabatan
+        // departemenPegawai: departemen ? departemen.value : '',  
+        // jabatanPegawai: jabatan ? jabatan.value : '', 
+        departemenPegawai: row['Departemen'],  
+        jabatanPegawai:  row['Jabatan'], 
       };
     });
 
@@ -85,17 +89,16 @@ const dialogCreate = async () => {
 };
 const saveRegistrasiBatch = async () => {
   submitted.value = true;
-
-  // Validasi form
-  const isValid = dataBatch.value(
-    (user) =>
-      user.namaPegawai &&
-      user.emailPegawai &&
-      user.usernamePegawai &&
-      user.departemenPegawai &&
-      user.jabatanPegawai &&
-      user.passwordPegawai
-  );
+  const isValid = dataBatch.value.every(
+  (user) =>
+    user.namaPegawai &&
+    user.emailPegawai &&
+    user.usernamePegawai &&
+    user.departemenPegawai &&
+    user.jabatanPegawai &&
+    user.passwordPegawai
+);
+ 
 
   if (!isValid) {
     toast.add({
@@ -148,6 +151,7 @@ const jabatanDanDepartemenDataPegawai = async () => {
 };
 onMounted(() => {
   jabatanDanDepartemenDataPegawai();
+  fetchData();
 });
 </script>
 
@@ -361,9 +365,9 @@ onMounted(() => {
               optionLabel="label"
               optionValue="value"
               placeholder="Pilih Jabatan"
-              :invalid="submitted && !data.jabatanPegawai"
+              :invalid="submitted && !user.jabatanPegawai"
             />
-            <small class="p-error" v-if="submitted && !data.jabatanPegawai"
+            <small class="p-error" v-if="submitted && !user.jabatanPegawai"
               >Jabatan diperlukan.</small
             >
           </div>
@@ -376,9 +380,9 @@ onMounted(() => {
               optionLabel="label"
               optionValue="value"
               placeholder="Pilih Jabatan"
-              :invalid="submitted && !data.departemenPegawai"
+              :invalid="submitted && !user.departemenPegawai"
             />
-            <small class="p-error" v-if="submitted && !data.departemenPegawai"
+            <small class="p-error" v-if="submitted && !user.departemenPegawai"
               >Departemen diperlukan.</small
             >
           </div>

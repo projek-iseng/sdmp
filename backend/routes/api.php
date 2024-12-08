@@ -3,6 +3,7 @@
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\masterData\LoginCRTL;
 use App\Http\Controllers\masterData\RegistrasiUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

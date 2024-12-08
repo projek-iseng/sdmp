@@ -23,21 +23,17 @@ class RegistrasiUsers extends Controller
         DB::beginTransaction();
         try {
             foreach ($request['users'] as $userData) {
-                // Enkripsi password
                 $encryptedPassword = enkripsi_helpers::customEncryptPassword($userData['namaPegawai'], $userData['passwordPegawai']);
-    
-                // Generate ID pengguna
                 $id = id_custom::P_id($userData['departemenPegawai'], $userData['jabatanPegawai']);
     
-                // Simpan ke tabel users
                 $user = new Users();
                 $user->nousers = $id;
                 $user->email = $userData['emailPegawai'];
                 $user->name = $userData['usernamePegawai'];
                 $user->password = $encryptedPassword;
+                $user->statusenable = true;
                 $user->save();
     
-                // Simpan ke tabel pegawai
                 $pegawai = new PegawaiModel();
                 $pegawai->namaPegawai = $userData['namaPegawai'];
                 $pegawai->objectusersfk = $user->nousers;
@@ -66,6 +62,22 @@ class RegistrasiUsers extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function index()
+    {
+        $pegawai = DB::table('pegawai_M as pg')
+            ->select('pg.*', 'dpm.namaDepartemen', 'jb.namaJabatan')
+            ->join('jabatan_M as jb', 'jb.id', '=', 'pg.jabatan_id')
+            ->join('departemen_M as dpm', 'dpm.id', '=', 'pg.departemen_id')
+            ->where('pg.statusenable', true)
+            ->get()
+            ->map(function ($item) {
+                $item->foto = $item->foto ? asset( $item->foto) : null;
+                return $item;
+            });
+
+        return response()->json($pegawai);
     }
 
 }
