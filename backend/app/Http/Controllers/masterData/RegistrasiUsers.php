@@ -64,20 +64,31 @@ class RegistrasiUsers extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $pegawai = DB::table('pegawai_M as pg')
             ->select('pg.*', 'dpm.namaDepartemen', 'jb.namaJabatan')
             ->join('jabatan_M as jb', 'jb.id', '=', 'pg.jabatan_id')
             ->join('departemen_M as dpm', 'dpm.id', '=', 'pg.departemen_id')
-            ->where('pg.statusenable', true)
-            ->get()
-            ->map(function ($item) {
-                $item->foto = $item->foto ? asset( $item->foto) : null;
-                return $item;
-            });
+            ->where('pg.statusenable', true);
+        if ($request->has('namaPegawai')) {
+            $pegawai->where('pg.namaPegawai', 'like', '%' . $request->namaPegawai . '%');
+        }
+        if ($request->has('idPegawai')) {
+            $pegawai->where('pg.objectusersfk', $request->idPegawai);
+        }
+        if ($request->has('jabatan')) {
+            $pegawai->where('jb.namaJabatan', 'like', '%' . $request->jabatan . '%');
+        }
+        if ($request->has('departemen')) {
+            $pegawai->where('dpm.namaDepartemen', 'like', '%' . $request->departemen . '%');
+        }
+        $result = $pegawai->get()->map(function ($item) {
+            $item->foto = $item->foto ? asset($item->foto) : null;
+            return $item;
+        });
 
-        return response()->json($pegawai);
+        return response()->json($result);
     }
 
 }

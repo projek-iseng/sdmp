@@ -10,6 +10,7 @@ const jabatanData = ref([]);
 const departemenData = ref([]);
 const data = ref([]);
 const search = ref([]);
+const listdataPegawai = ref([]);
 const loading = ref(false);
 const submitted = ref(false);
 const productDialog = ref(false);
@@ -18,9 +19,14 @@ const toast = useToast();
 
 const fetchData = async () => {
   try {
-    const response = await apiClient.get("/api/master-data/registrasiUsers");
-    conso
-    listdata.value = response.data; // Pastikan data yang diterima sesuai dengan format yang diharapkan
+    const params = [];
+    if (search.value.namapegawai) params.push(`namaPegawai=${search.value.namapegawai}`);
+    if (search.value.idPegawai) params.push(`idPegawai=${search.value.idPegawai}`);
+    if (search.value.jabatan) params.push(`jabatan=${search.value.jabatan}`);
+    if (search.value.departemen) params.push(`departemen=${search.value.departemen}`);
+    const src = params.length > 0 ? params.join('&') : '';
+    const response = await apiClient.get(`/api/master-data/registrasiUsers?${src}`);
+    listdataPegawai.value = response.data;
   } catch (error) {
     console.error("Error loading data:", error);
   }
@@ -162,37 +168,42 @@ onMounted(() => {
         class="flex align-items-center justify-content-center no-resize"
         :size="65"
       >
-        <div class="formgrid grid">
+        <div v-if="listdataPegawai.length === 0" class="flex justify-content-center align-items-center" style="height: 200px;">
+          <p class="text-center">Data tidak ada</p>
+        </div>
+        <div v-else class="formgrid grid">
           <div class="field grid">
-            <Card class="custom-card">
-              <template #title>Nama Pegawai</template>
+            <Card v-for="pegawai in listdataPegawai" :key="pegawai.id" class="custom-card" style="margin:30px; ">
+              <template #title>{{ pegawai.namaPegawai }}</template>
               <template #content>
                 <div class="flex justify-content-center align-items-center">
                   <div class="text-center">
                     <div>
                       <div class="imgPegawai">
-                        <p>gambar</p>
+                        <img v-if="pegawai.foto" :src="pegawai.foto" alt="Foto Pegawai" />
+                        <p v-else>Gambar</p>
                       </div>
                     </div>
                     <div style="text-items: center">
                       <div>
-                        <span>id: 12052004</span>
+                        <span>{{ pegawai.objectusersfk }}</span>
                       </div>
                     </div>
                     <div>
                       <div class="formgrid grid">
                         <div class="field col">
-                          <span>Derektur</span>
+                          <span>{{ pegawai.namaJabatan }}</span>
                         </div>
                         <div class="field col">
-                          <span>DErektur</span>
+                          <span>{{ pegawai.namaDepartemen }}</span>
                         </div>
                       </div>
                     </div>
                     <div>
                       <div class="formgrid grid">
                         <div class="field col m-1">
-                          <span>tanggal gabung</span>
+                          <p>tanggal Gabung</p>
+                          <span>{{ pegawai.tglGabung }}</span>
                         </div>
                       </div>
                     </div>
@@ -244,6 +255,7 @@ onMounted(() => {
               label="Search User's"
               icon="pi pi-search"
               class="w-10"
+              @click="fetchData"
               :loading="loading"
             />
           </div>
