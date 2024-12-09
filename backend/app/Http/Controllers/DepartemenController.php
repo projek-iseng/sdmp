@@ -14,9 +14,11 @@ class DepartemenController extends Controller
      */
     public function index()
     {
-        $jabatan = DepartemenModel::all();
+        $departemen = DepartemenModel::select('id', 'namaDepartemen')
+        ->where('statusenable', true)
+        ->get();
         $data = [
-            "data" => $jabatan,
+            "data" => $departemen,
             "message" => 'piy@'
         ];
         return response()->json($data);

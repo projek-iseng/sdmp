@@ -29,7 +29,9 @@ class JabatanController extends Controller
      */
     public function index()
     {
-        $jabatan = JabatanModel::all();
+        $jabatan = JabatanModel::select('id', 'namaJabatan')
+        ->where('statusEnable', true)
+        ->get();
         $data = [
             "data" => $jabatan,
             "message" => 'success'
