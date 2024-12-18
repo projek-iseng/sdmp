@@ -345,7 +345,11 @@ onMounted(() => {
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
-  gap: 20px;
+  border: none;
+}
+
+.grid-container div:nth-child(2) {
+  background-color: #222; /* Ganti dengan warna yang diinginkan */
 }
 
 .calendar-container {

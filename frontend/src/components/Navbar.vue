@@ -67,7 +67,7 @@ const router = useRouter();
 
 const role = "director";
 const isDropdownVisible = ref(false);
-const checked = ref(true);
+const checked = ref(false);
 
 function navigateToPage() {}
 function toggleDropdown() {
