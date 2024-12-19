@@ -32,7 +32,8 @@
       </template>
       <template #end>
         <div class="flex align-items-center gap-2">
-          <ToggleButton v-model="checked" onLabel="Light" offLabel="Dark" />
+          <!-- <ToggleButton v-model="checked" onLabel="Light" offLabel="Dark" /> -->
+          <InputSwitch v-model="checked" />
           <InputText
             placeholder="Search"
             type="text"

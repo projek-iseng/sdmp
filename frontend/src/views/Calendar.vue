@@ -44,10 +44,11 @@
       <div class="table-container">
         <h2>Rekap Jumlah Pegawai</h2>
         <DataTable
+          reff="dt"
           :value="rekapJumlahPegawai"
           paginator
-          :rows="5"
-          :rowsPerPageOptions="[5, 10, 20, 50]"
+          :rows="3"
+          :rowsPerPageOptions="[3, 6, 9, 10]"
           tableStyle="min-width: 50rem"
         >
           <Column field="no" header="No" style="width: 15%"></Column>
@@ -78,8 +79,8 @@
         reff="dt"
         :value="customers"
         paginator
-        :rows="5"
-        :rowsPerPageOptions="[5, 10, 20, 50]"
+        :rows="3"
+        :rowsPerPageOptions="[3, 6, 9, 10]"
         tableStyle="min-width: 50rem"
       >
         <Column
@@ -256,6 +257,46 @@ const customers = ref([
   {
     idPegawai: "002",
     namePegawai: "Azhar As Rahmatulloh",
+    jabatan: "Staff",
+    departemen: "IT",
+    tglPengajuan: "2024-11-02",
+    keterangan: "Izin Sakit",
+    detail: "Sakit flu",
+    status: "Pending",
+  },
+  {
+    idPegawai: "003",
+    namePegawai: "Testing",
+    jabatan: "Staff",
+    departemen: "IT",
+    tglPengajuan: "2024-11-02",
+    keterangan: "Izin Sakit",
+    detail: "Sakit flu",
+    status: "Rejected",
+  },
+  {
+    idPegawai: "003",
+    namePegawai: "Testing",
+    jabatan: "Staff",
+    departemen: "IT",
+    tglPengajuan: "2024-11-02",
+    keterangan: "Izin Sakit",
+    detail: "Sakit flu",
+    status: "ACC",
+  },
+  {
+    idPegawai: "003",
+    namePegawai: "Testing",
+    jabatan: "Staff",
+    departemen: "IT",
+    tglPengajuan: "2024-11-02",
+    keterangan: "Izin Sakit",
+    detail: "Sakit flu",
+    status: "ACC",
+  },
+  {
+    idPegawai: "003",
+    namePegawai: "Testing",
     jabatan: "Staff",
     departemen: "IT",
     tglPengajuan: "2024-11-02",
