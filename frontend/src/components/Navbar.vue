@@ -1,39 +1,17 @@
 <template>
   <div class="card">
     <Menubar :model="items">
-      <template #start> </template>
-      <template #item="{ item, props, hasSubmenu, root }">
-        <a
-          v-ripple
-          class="flex align-items-center"
-          v-bind="props.action"
-          style="padding-left: 60px"
-        >
-          <span :class="item.icon" />
-          <span class="ml-2">{{ item.label }}</span>
-          <Badge
-            v-if="item.badge"
-            :class="{ 'ml-auto': !root, 'ml-2': root }"
-            :value="item.badge"
-          />
-          <span
-            v-if="item.shortcut"
-            class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
-            >{{ item.shortcut }}</span
-          >
-          <i
-            v-if="hasSubmenu"
-            :class="[
-              'pi pi-angle-down',
-              { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root },
-            ]"
-          ></i>
-        </a>
-      </template>
+      <template #start></template>
       <template #end>
         <div class="flex align-items-center gap-2">
-          <!-- <ToggleButton v-model="checked" onLabel="Light" offLabel="Dark" /> -->
-          <InputSwitch v-model="checked" />
+          <div class="toggle-container" @click="toggleTheme">
+            <Button class="toggle-button">
+              <i
+                :class="checked ? 'pi pi-moon' : 'pi pi-sun'"
+                :style="{ color: checked ? 'yellow' : 'orange' }"
+              ></i>
+            </Button>
+          </div>
           <InputText
             placeholder="Search"
             type="text"
@@ -58,19 +36,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { FilterMatchMode } from "primevue/api";
-import { useToast } from "primevue/usetoast";
-import spongebobImg from "../assets/sepongebob.png";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import spongebobImg from "../assets/sepongebob.png";
 
 const router = useRouter();
 
 const role = "director";
 const isDropdownVisible = ref(false);
-const checked = ref(false);
+const checked = ref(false); // Status untuk dark mode
 
-function navigateToPage() {}
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
 }
@@ -81,33 +56,30 @@ function handleAction(action) {
   } else {
     console.error(`Route "${action}" tidak ditemukan!`);
   }
-
   isDropdownVisible.value = false;
 }
 
-const jabatanDanDepartemenDataPegawai = async () => {
-  try {
-    const responseJabatan = await apiClient.get("/api/jabatan");
-    role.value = responseJabatan.data.data.map((item) => ({
-      label: item.namaJabatan,
-      value: item.id,
-    }));
-  } catch (error) {
-    console.error("Error loading data:", error);
+// Fungsi untuk mengganti tema
+function toggleTheme() {
+  checked.value = !checked.value;
+  const htmlElement = document.documentElement;
+  if (checked.value) {
+    htmlElement.classList.add("dark");
+    htmlElement.classList.remove("light");
+  } else {
+    htmlElement.classList.add("light");
+    htmlElement.classList.remove("dark");
   }
-};
+}
+
+// Terapkan tema awal
+watch(checked, toggleTheme);
+toggleTheme();
 
 function getImage() {
   if (role === "director") {
     return spongebobImg;
   }
-  //   } else if (role === 'hrd') {
-  //     return patrikImg;
-  //   } else if (role === 'programmer') {
-  //     return squidwardImg;
-  //   } else {
-  //     return ''; // Jalur default jika tidak ada yang cocok
-  //   }
 }
 
 const items = ref([
@@ -166,13 +138,13 @@ const items = ref([
   },
 ]);
 </script>
+
 <style scoped>
 .custom-split-button {
   padding: 0px;
   border-radius: 50%;
   margin: 10px;
   background-color: transparent;
-  color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,7 +153,6 @@ const items = ref([
 
 .button-image {
   width: 50px;
-  /* Atur ukuran gambar sesuai kebutuhan */
   height: auto;
   border-radius: 50%;
 }
@@ -189,12 +160,6 @@ const items = ref([
 .dropdown-container {
   position: relative;
   display: inline-block;
-}
-
-.custom-split-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .dropdown-menu {
@@ -224,5 +189,36 @@ const items = ref([
 
 .dropdown-menu li:hover {
   background-color: #f0f0f0;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+</style>
+
+<style>
+html.light {
+  --bg-color: white;
+  --text-color: black;
+}
+
+html.dark {
+  --bg-color: #1a1a1a;
+  --text-color: white;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 </style>
