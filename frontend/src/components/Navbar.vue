@@ -1,22 +1,16 @@
 <template>
   <div class="card">
-    <Menubar :model="items">
+    <Menubar :model="items" class="custom-menubar">
+
       <template #start></template>
       <template #end>
         <div class="flex align-items-center gap-2">
-          <div class="toggle-container" @click="toggleTheme">
+          <div class="toggle-container" @click="checked = !checked">
             <Button class="toggle-button">
-              <i
-                :class="checked ? 'pi pi-moon' : 'pi pi-sun'"
-                :style="{ color: checked ? 'yellow' : 'orange' }"
-              ></i>
+              <i :class="checked ? 'pi pi-moon' : 'pi pi-sun'" :style="{ color: checked ? 'yellow' : 'orange' }"></i>
             </Button>
           </div>
-          <InputText
-            placeholder="Search"
-            type="text"
-            class="w-8rem sm:w-auto"
-          />
+          <InputText placeholder="Search" type="text" class="w-8rem sm:w-auto" />
           <div class="dropdown-container">
             <Button class="custom-split-button" @click="toggleDropdown">
               <img :src="getImage()" alt="Role Icon" class="button-image" />
@@ -44,7 +38,7 @@ const router = useRouter();
 
 const role = "director";
 const isDropdownVisible = ref(false);
-const checked = ref(false); // Status untuk dark mode
+const checked = ref(true); // Status untuk dark mode
 
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
@@ -59,9 +53,20 @@ function handleAction(action) {
   isDropdownVisible.value = false;
 }
 
-// Fungsi untuk mengganti tema
-function toggleTheme() {
-  checked.value = !checked.value;
+
+// Terapkan tema awal
+watch(checked, (newValue) => {
+  const htmlElement = document.documentElement;
+  if (newValue) {
+    htmlElement.classList.add("dark");
+    htmlElement.classList.remove("light");
+  } else {
+    htmlElement.classList.add("light");
+    htmlElement.classList.remove("dark");
+  }
+});
+
+function applyInitialTheme() {
   const htmlElement = document.documentElement;
   if (checked.value) {
     htmlElement.classList.add("dark");
@@ -72,9 +77,8 @@ function toggleTheme() {
   }
 }
 
-// Terapkan tema awal
-watch(checked, toggleTheme);
-toggleTheme();
+applyInitialTheme();  // Panggil fungsi ini segera
+
 
 function getImage() {
   if (role === "director") {
@@ -140,6 +144,33 @@ const items = ref([
 </script>
 
 <style scoped>
+/* Geser keseluruhan Menubar ke kanan */
+.custom-menubar {
+  padding-left: 4rem;
+  /* Geser seluruh menu ke kanan */
+}
+
+/* Atur padding untuk item spesifik (Home, Features, Projects) */
+.p-menubar .p-menuitem:first-child .p-menuitem-text {
+  padding-left: 1rem;
+  /* Home */
+}
+
+.p-menubar .p-menuitem:nth-child(2) .p-menuitem-text {
+  padding-left: 1.5rem;
+  /* Features */
+}
+
+.p-menubar .p-menuitem:nth-child(3) .p-menuitem-text {
+  padding-left: 1.5rem;
+  /* Projects */
+}
+
+/* Pastikan dropdown tetap terposisi dengan baik */
+.dropdown-container {
+  position: relative;
+}
+
 .custom-split-button {
   padding: 0px;
   border-radius: 50%;
