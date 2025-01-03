@@ -64,7 +64,7 @@
                 }
             }
         },
-        "/api/jabatan/{id}": {
+        "/api/jabatan/{kode}": {
             "get": {
                 "tags": [
                     "Jabatan"
@@ -73,7 +73,7 @@
                 "operationId": "getJabatanById",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "kode",
                         "in": "path",
                         "description": "Jabatan ID",
                         "required": true,
@@ -106,7 +106,7 @@
                 "operationId": "updateJabatan",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "kode",
                         "in": "path",
                         "description": "Jabatan ID",
                         "required": true,
@@ -149,7 +149,7 @@
                 "operationId": "deleteJabatan",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "kode",
                         "in": "path",
                         "description": "Jabatan ID",
                         "required": true,
@@ -178,7 +178,7 @@
                     "statusEnable"
                 ],
                 "properties": {
-                    "id": {
+                    "kode": {
                         "type": "integer",
                         "example": 1
                     },

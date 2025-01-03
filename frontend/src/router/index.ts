@@ -9,7 +9,7 @@ const routes = [
     name: "home",
     component: () =>
       import(/* webpackChunkName: "home" */ "../views/Dashboard.vue"),
-    props: (route) => ({ isSidebarOpen: route.params.isSidebarOpen }), // Penerusan props
+    // props: (route) => ({ isSidebarOpen: route.params.isSidebarOpen }), // Penerusan props
   },
   {
     path: "/pegawai-dashboard",

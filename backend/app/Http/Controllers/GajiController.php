@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GajiModel;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class GajiController extends Controller
 {
@@ -13,20 +15,19 @@ class GajiController extends Controller
      */
     public function index()
     {
-        //
-        return response()->json(['message' => 'hello world']);
+        $gaji = GajiModel::all();
+        $data = [
+            "gaji" => $gaji,
+            "message" => 'success'
+        ];
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], Response::HTTP_OK);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.

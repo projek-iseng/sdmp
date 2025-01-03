@@ -24,7 +24,7 @@ class PegawaiController extends Controller
             ->where('pg.statusenable', true)
             ->get()
             ->map(function ($item) {
-                $item->foto = $item->foto ? asset( $item->foto) : null;
+                $item->foto = $item->foto ? asset($item->foto) : null;
                 return $item;
             });
 
@@ -38,19 +38,19 @@ class PegawaiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {    
+    {
         $tglLahir = Carbon::createFromFormat('d/m/Y', $request->TglLahirPGW)->format('d-m-Y');
         $tglGabung = Carbon::createFromFormat('d/m/Y', $request->TglGabungPGW)->format('d-m-Y');
 
         // dd($request->delete['pegawai_id']);
-        if(isset($request->delete['pegawai_id'])){
+        if (isset($request->delete['pegawai_id'])) {
             $deletedPegawaiCount = PegawaiModel::whereIn('id', $request->delete['pegawai_id'])->delete();
-        
+
             return response()->json([
                 'message' => "$deletedPegawaiCount pegawai berhasil dihapus",
                 'data'    => [],
             ], 200);
-        }else{
+        } else {
             if (isset($request->id_pegawai)) {
                 $pegawai = PegawaiModel::findOrFail($request->id_pegawai);
                 $message = 'Data pegawai berhasil diperbarui';
@@ -59,7 +59,7 @@ class PegawaiController extends Controller
                 $message = 'Data pegawai berhasil disimpan';
             }
         }
-        
+
         // dd('hello');
         // dd($request->hasFile('foto'));
         if ($request->hasFile('foto')) {
@@ -67,7 +67,7 @@ class PegawaiController extends Controller
             $path = $request->file('foto')->storeAs('uploads/foto', $fileName, 'public');
             $pegawai->foto = 'storage/' . $path;
         }
-    
+
         $pegawai->namaPegawai   = $request->namaPegawai;
         $pegawai->email         = $request->emailPGW;
         $pegawai->noTelepon     = $request->noTeleponPGW;
@@ -77,9 +77,9 @@ class PegawaiController extends Controller
         $pegawai->jabatan_id    = $request->jabatanPGW;
         $pegawai->statusenable  = true;
         $pegawai->departemen_id = $request->departemenPGW;
-    
+
         $pegawai->save();
-    
+
         return response()->json([
             'message' => $message,
             'data'    => $pegawai,
