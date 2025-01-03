@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\DepartemenController;
-use App\Http\Controllers\GajiController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\master\GajiController;
 use App\Http\Controllers\masterData\RegistrasiUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +26,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResource('jabatan', JabatanController::class);
 Route::apiResource('departemen', DepartemenController::class);
-Route::apiResource('gaji', GajiController::class);
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('gaji', GajiController::class);
+});
 
 
 Route::prefix('master-data')->group(function () {

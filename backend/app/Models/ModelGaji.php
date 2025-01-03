@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GajiModel extends Model
+class ModelGaji extends Model
 {
     use HasFactory;
 
@@ -15,6 +15,9 @@ class GajiModel extends Model
         'uuid',
         'is_active',
         'nominal',
+        "kd_gaji",
+        'created_by',
+        'updated_by',
     ];
 
     protected $cast = [

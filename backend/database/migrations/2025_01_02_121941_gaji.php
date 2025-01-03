@@ -17,7 +17,8 @@ class Gaji extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->boolean('is_active')->default(true);
-            $table->string('nominal');
+            $table->integer('nominal');
+            $table->string('kd_gaji');
             $table->char('created_by', 36);
             $table->char('updated_by', 36);
             $table->timestamps();
