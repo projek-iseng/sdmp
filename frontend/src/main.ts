@@ -1,12 +1,14 @@
 import "primeflex/primeflex.css";
-import "primevue/resources/themes/aura-dark-lime/theme.css";
 // import "primevue/resources/themes/aura-light-lime/theme.css";
 // import "primevue/resources/themes/aura-light-green/theme.css";
+// import "primevue/resources/themes/aura-dark-lime/theme.css";
+import "primevue/resources/themes/saga-blue/theme.css";
 
 import "primevue/resources/primevue.min.css"; /* Deprecated */
 import "primeicons/primeicons.css";
 import "./style.css";
 import "./flags.css";
+// import 'bulma/css/bulma.css';
 
 import { createApp } from "vue";
 import App from "./App.vue";
