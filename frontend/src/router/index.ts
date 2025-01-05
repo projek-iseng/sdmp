@@ -1,6 +1,7 @@
 //import vue router
 import { createRouter, createWebHistory } from "vue-router";
 import masterRoutes from "../views/master/master-index";
+import sysadminRoutes from "../views/Sysadmin/master-index";
 
 //define a routes
 const routes = [
@@ -32,6 +33,7 @@ const routes = [
   },
 
   ...masterRoutes,
+  ...sysadminRoutes,
 ];
 
 //create router

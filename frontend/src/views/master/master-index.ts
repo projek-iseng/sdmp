@@ -14,11 +14,6 @@ const masterRoutes: Array<RouteRecordRaw> = [
     component: () => import("./master-registrasi.vue"),
   },
   {
-    path: "/Log-users",
-    name: "Log-users",
-    component: () => import("./LogUsers.vue"),
-  },
-  {
     path: "/master-departemen",
     name: "Master Departemen",
     component: () => import("./master-departemen.vue"),

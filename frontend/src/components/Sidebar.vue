@@ -108,6 +108,13 @@
                             <span class="font-medium">Log User's</span>
                           </a>
                         </li>
+                        <li>
+                          <a v-ripple href="/map-to-modul"
+                            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                            <i class="pi pi-chart-line mr-2"></i>
+                            <span class="font-medium">Map To Modul</span>
+                          </a>
+                        </li>
                       </ul>
                     </li>
                   </ul>

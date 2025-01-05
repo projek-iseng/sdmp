@@ -10,13 +10,14 @@ use Illuminate\Support\Str;
 
 
 use App\Models\User;
+use App\Traits\Log;
 use App\Http\Controllers\Controller;
 
 
 
 class AuthController extends Controller
 {
-
+    use Log;
 
     public function user(Request $request)
     {
