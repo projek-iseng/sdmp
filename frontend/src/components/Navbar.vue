@@ -7,7 +7,7 @@
         <div class="flex align-items-center gap-2">
           <div class="toggle-container" @click="toggleDarkMode">
             <Button class="toggle-button">
-              <i :class="checked ? 'pi pi-moon' : 'pi pi-sun'" :style="{ color: checked ? 'yellow' : 'orange' }"></i>
+              <i :class="checked ? 'pi pi-moon' : 'pi pi-sun'" :style="{ color: checked ? 'yellow' : 'orange',fontSize: '20px' }"></i>
             </Button>
           </div>
           <InputText placeholder="Search" type="text" style="width: 200px;"   />
@@ -243,12 +243,13 @@ applyInitialTheme();
   background-color: transparent;
   border: none;
   cursor: pointer;
+  text-align: center;
   font-size: 1.5rem;
 }
 </style>
 
 <style>
-html.light {
+html.light  {
   --bg-color: white;
   --text-color: black;
 }
@@ -258,7 +259,7 @@ html.dark {
   --text-color: white;
 }
 
-body {
+body{
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;

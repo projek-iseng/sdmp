@@ -23,6 +23,11 @@ const masterRoutes: Array<RouteRecordRaw> = [
     name: "Master Departemen",
     component: () => import("./master-departemen.vue"),
   },
+  {
+    path: "/master-gaji",
+    name: "Master Gaji",
+    component: () => import("./master-gaji.vue"),
+  },
 ];
 
 //create router

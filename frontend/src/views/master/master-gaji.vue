@@ -212,7 +212,7 @@ const getSeverity = (product) => {
       <SplitterPanel class="no-resize" :size="5" style="padding: 20px">
         <div class="card">
         <TabView>
-            <TabPanel header="Create Pegawai">
+            <TabPanel header="Create Gaji">
               <div class="">
                   <FloatLabel class="mt-5">
                       <InputText class="w-full" id="Nama" v-model="value.Nama" />
