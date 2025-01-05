@@ -5,12 +5,12 @@
       <template #start></template>
       <template #end>
         <div class="flex align-items-center gap-2">
-          <div class="toggle-container" @click="checked = !checked">
+          <div class="toggle-container" @click="toggleDarkMode">
             <Button class="toggle-button">
               <i :class="checked ? 'pi pi-moon' : 'pi pi-sun'" :style="{ color: checked ? 'yellow' : 'orange' }"></i>
             </Button>
           </div>
-          <InputText placeholder="Search" type="text" class="w-8rem sm:w-auto" />
+          <InputText placeholder="Search" type="text" style="width: 200px;"   />
           <div class="dropdown-container">
             <Button class="custom-split-button" @click="toggleDropdown">
               <img :src="getImage()" alt="Role Icon" class="button-image" />
@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import spongebobImg from "../assets/sepongebob.png";
@@ -38,13 +38,13 @@ const router = useRouter();
 
 const role = "director";
 const isDropdownVisible = ref(false);
-const checked = ref(true); // Status untuk dark mode
+// const checked = ref(true); // Status untuk dark mode
 
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
 }
 
-function handleAction(action) {
+function handleAction(action:any) {
   if (action === "auth" || action === "profile" || action === "settings") {
     router.push({ name: action });
   } else {
@@ -53,31 +53,6 @@ function handleAction(action) {
   isDropdownVisible.value = false;
 }
 
-
-// Terapkan tema awal
-watch(checked, (newValue) => {
-  const htmlElement = document.documentElement;
-  if (newValue) {
-    htmlElement.classList.add("dark");
-    htmlElement.classList.remove("light");
-  } else {
-    htmlElement.classList.add("light");
-    htmlElement.classList.remove("dark");
-  }
-});
-
-function applyInitialTheme() {
-  const htmlElement = document.documentElement;
-  if (checked.value) {
-    htmlElement.classList.add("dark");
-    htmlElement.classList.remove("light");
-  } else {
-    htmlElement.classList.add("light");
-    htmlElement.classList.remove("dark");
-  }
-}
-
-applyInitialTheme();  // Panggil fungsi ini segera
 
 
 function getImage() {
@@ -141,6 +116,64 @@ const items = ref([
     badge: 3,
   },
 ]);
+const checked = ref(localStorage.getItem('dark-mode') === 'true');
+
+// Fungsi untuk mengganti tema menggunakan dynamic import
+function switchTheme(theme: string) {
+  // Menghapus tema sebelumnya jika ada
+  const existingLink = document.getElementById('theme-link');
+  if (existingLink) {
+    existingLink.remove();
+  }
+
+  // Membuat elemen <link> baru untuk tema yang dipilih
+  const themeLink = document.createElement('link');
+  themeLink.id = 'theme-link';
+  themeLink.rel = 'stylesheet';
+  themeLink.href = `/node_modules/primevue/resources/themes/${theme}/theme.css`; // Sesuaikan dengan path tema yang benar
+
+  // Menambahkan elemen <link> ke <head>
+  document.head.appendChild(themeLink);
+
+  // Log untuk memastikan tema berhasil diterapkan
+  console.log(`Tema ${theme} berhasil diterapkan`);
+}
+
+// Fungsi untuk toggle antara mode gelap dan terang
+function toggleDarkMode() {
+  checked.value = !checked.value; // Toggle nilai checked
+  if (checked.value) {
+    switchTheme('aura-dark-lime'); // Tema gelap
+    localStorage.setItem('dark-mode', 'true');
+  } else {
+    switchTheme('saga-blue'); // Tema terang
+    localStorage.setItem('dark-mode', 'false');
+  }
+}
+
+// Fungsi untuk menerapkan tema awal berdasarkan status mode gelap
+function applyInitialTheme() {
+  if (checked.value) {
+    switchTheme('aura-dark-lime'); // Tema gelap
+  } else {
+    switchTheme('saga-blue'); // Tema terang
+  }
+}
+
+// Memanggil fungsi untuk menerapkan tema berdasarkan status mode gelap saat pertama kali load
+applyInitialTheme();
+
+// Watch untuk memonitor perubahan pada checked dan mengupdate kelas di html
+watch(checked, (newValue) => {
+  const htmlElement = document.documentElement;
+  if (newValue) {
+    htmlElement.classList.add("dark");
+    htmlElement.classList.remove("light");
+  } else {
+    htmlElement.classList.add("light");
+    htmlElement.classList.remove("dark");
+  }
+});
 </script>
 
 <style scoped>
