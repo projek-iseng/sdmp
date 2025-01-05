@@ -36,9 +36,9 @@ import spongebobImg from "../assets/sepongebob.png";
 
 const router = useRouter();
 
+const checked = ref(localStorage.getItem('dark-mode') === 'true');
 const role = "director";
 const isDropdownVisible = ref(false);
-// const checked = ref(true); // Status untuk dark mode
 
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
@@ -116,54 +116,37 @@ const items = ref([
     badge: 3,
   },
 ]);
-const checked = ref(localStorage.getItem('dark-mode') === 'true');
 
-// Fungsi untuk mengganti tema menggunakan dynamic import
 function switchTheme(theme: string) {
-  // Menghapus tema sebelumnya jika ada
   const existingLink = document.getElementById('theme-link');
   if (existingLink) {
     existingLink.remove();
   }
-
-  // Membuat elemen <link> baru untuk tema yang dipilih
   const themeLink = document.createElement('link');
   themeLink.id = 'theme-link';
   themeLink.rel = 'stylesheet';
   themeLink.href = `/node_modules/primevue/resources/themes/${theme}/theme.css`; // Sesuaikan dengan path tema yang benar
-
-  // Menambahkan elemen <link> ke <head>
   document.head.appendChild(themeLink);
-
-  // Log untuk memastikan tema berhasil diterapkan
-  console.log(`Tema ${theme} berhasil diterapkan`);
 }
 
-// Fungsi untuk toggle antara mode gelap dan terang
 function toggleDarkMode() {
-  checked.value = !checked.value; // Toggle nilai checked
+  checked.value = !checked.value;
   if (checked.value) {
-    switchTheme('aura-dark-lime'); // Tema gelap
+    switchTheme('aura-dark-lime'); 
     localStorage.setItem('dark-mode', 'true');
   } else {
-    switchTheme('saga-blue'); // Tema terang
+    switchTheme('saga-blue'); 
     localStorage.setItem('dark-mode', 'false');
   }
 }
 
-// Fungsi untuk menerapkan tema awal berdasarkan status mode gelap
 function applyInitialTheme() {
   if (checked.value) {
-    switchTheme('aura-dark-lime'); // Tema gelap
+    switchTheme('aura-dark-lime'); 
   } else {
-    switchTheme('saga-blue'); // Tema terang
+    switchTheme('saga-blue');
   }
 }
-
-// Memanggil fungsi untuk menerapkan tema berdasarkan status mode gelap saat pertama kali load
-applyInitialTheme();
-
-// Watch untuk memonitor perubahan pada checked dan mengupdate kelas di html
 watch(checked, (newValue) => {
   const htmlElement = document.documentElement;
   if (newValue) {
@@ -174,32 +157,27 @@ watch(checked, (newValue) => {
     htmlElement.classList.remove("dark");
   }
 });
+
+applyInitialTheme();
 </script>
 
 <style scoped>
-/* Geser keseluruhan Menubar ke kanan */
 .custom-menubar {
   padding-left: 4rem;
-  /* Geser seluruh menu ke kanan */
 }
 
-/* Atur padding untuk item spesifik (Home, Features, Projects) */
 .p-menubar .p-menuitem:first-child .p-menuitem-text {
   padding-left: 1rem;
-  /* Home */
 }
 
 .p-menubar .p-menuitem:nth-child(2) .p-menuitem-text {
   padding-left: 1.5rem;
-  /* Features */
 }
 
 .p-menubar .p-menuitem:nth-child(3) .p-menuitem-text {
   padding-left: 1.5rem;
-  /* Projects */
 }
 
-/* Pastikan dropdown tetap terposisi dengan baik */
 .dropdown-container {
   position: relative;
 }
