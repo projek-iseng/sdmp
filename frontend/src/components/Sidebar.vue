@@ -119,6 +119,55 @@
                     <span class="font-medium">Calendar Pegawai</span>
                   </a>
                 </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Manajemen Karyawan</span>
+                  </a>
+                </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Kehadiran dan Absensi</span>
+                  </a>
+                </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Penggajian</span>
+                  </a>
+                </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Manajemen Cuti</span>
+                  </a>
+                </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Penilaian Kinerja</span>
+                  </a>
+                </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Pelatihan dan Pengembangan</span>
+                  </a>
+                </li>
+                <li>
+                  <a v-ripple href="/calendar"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Laporan dan Analitik</span>
+                  </a>
+                </li>
               </ul>
               <ul class="list-none p-3 m-0">
                 <li>
