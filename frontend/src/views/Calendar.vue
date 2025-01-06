@@ -390,7 +390,7 @@ onMounted(() => {
 }
 
 .grid-container div:nth-child(2) {
-  background-color: #222; /* Ganti dengan warna yang diinginkan */
+  background-color: #222;
 }
 
 .calendar-container {
@@ -403,7 +403,7 @@ onMounted(() => {
 
 .divider {
   width: 1px;
-  background-color: #ccc;
+  background-color: #87cefa;
   height: 100%;
 }
 
@@ -412,19 +412,25 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #0c0c0c;
-  color: rgb(231, 228, 228);
+  background-color: #4682b4;
+  color: #ffffff;
   font-size: 18px;
+  border-radius: 6px;
 }
 
 .calendar-header button {
   background: none;
   border: none;
-  background-color: #0a0a0a;
-  color: rgb(233, 219, 219);
+  background-color: #4682b4;
+  color: #ffffff;
   font-size: 20px;
   cursor: pointer;
   padding: 5px;
+  border-radius: 6px;
+}
+
+.calendar-header button:hover {
+  background-color: #4169e1;
 }
 
 .calendar-header h2 {
@@ -440,39 +446,41 @@ onMounted(() => {
 .calendar td {
   text-align: center;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid #b0c4de;
   font-size: 14px;
-  color: white;
+  border-radius: 6px;
+  color: #000080;
 }
 
 .calendar th {
-  background-color: #222;
+  background-color: #87ceeb;
   font-weight: bold;
+  color: #000080;
 }
 
 .calendar td {
-  background-color: #000;
+  background-color: #ffffff;
   transition: background-color 0.3s, transform 0.3s;
   cursor: pointer;
 }
 
 .calendar td:hover {
-  background-color: #070707;
+  background-color: #add8e6;
   transform: scale(1.1);
 }
 
 .calendar td.other-month {
-  color: #aaa;
+  color: #a9a9a9;
 }
 
 .calendar td.hovered {
-  background-color: #d0d0d0;
+  background-color: #b0e0e6;
 }
 
 .calendar td.current-day {
-  color: red;
-  background-color: #000;
-  border-radius: 0;
+  color: #ffffff;
+  background-color: #4169e1;
+  border-radius: 6px;
   font-weight: bold;
 }
 
