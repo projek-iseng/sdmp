@@ -47,8 +47,8 @@
           reff="dt"
           :value="rekapJumlahPegawai"
           paginator
-          :rows="3"
-          :rowsPerPageOptions="[3, 6, 9, 10]"
+          :rows="5"
+          :rowsPerPageOptions="[5, 10]"
           tableStyle="min-width: 50rem"
         >
           <Column field="no" header="No" style="width: 15%"></Column>
@@ -459,7 +459,7 @@ onMounted(() => {
 }
 
 .calendar td {
-  background-color: #ffffff;
+  background-color: #f8f7f7;
   transition: background-color 0.3s, transform 0.3s;
   cursor: pointer;
 }

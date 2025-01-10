@@ -1,16 +1,21 @@
 <template>
   <div class="card">
     <Menubar :model="items" class="custom-menubar">
-
       <template #start></template>
       <template #end>
         <div class="flex align-items-center gap-2">
           <div class="toggle-container" @click="toggleDarkMode">
             <Button class="toggle-button">
-              <i :class="checked ? 'pi pi-moon' : 'pi pi-sun'" :style="{ color: checked ? 'yellow' : 'orange',fontSize: '20px' }"></i>
+              <i
+                :class="checked ? 'pi pi-moon' : 'pi pi-sun'"
+                :style="{
+                  color: checked ? 'yellow' : 'orange',
+                  fontSize: '20px',
+                }"
+              ></i>
             </Button>
           </div>
-          <InputText placeholder="Search" type="text" style="width: 200px;"   />
+          <InputText placeholder="Search" type="text" style="width: 200px" />
           <div class="dropdown-container">
             <Button class="custom-split-button" @click="toggleDropdown">
               <img :src="getImage()" alt="Role Icon" class="button-image" />
@@ -36,7 +41,7 @@ import spongebobImg from "../assets/sepongebob.png";
 
 const router = useRouter();
 
-const checked = ref(localStorage.getItem('dark-mode') === 'true');
+const checked = ref(localStorage.getItem("dark-mode") === "true");
 const role = "director";
 const isDropdownVisible = ref(false);
 
@@ -44,7 +49,7 @@ function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
 }
 
-function handleAction(action:any) {
+function handleAction(action: any) {
   if (action === "auth" || action === "profile" || action === "settings") {
     router.push({ name: action });
   } else {
@@ -52,8 +57,6 @@ function handleAction(action:any) {
   }
   isDropdownVisible.value = false;
 }
-
-
 
 function getImage() {
   if (role === "director") {
@@ -118,13 +121,13 @@ const items = ref([
 ]);
 
 function switchTheme(theme: string) {
-  const existingLink = document.getElementById('theme-link');
+  const existingLink = document.getElementById("theme-link");
   if (existingLink) {
     existingLink.remove();
   }
-  const themeLink = document.createElement('link');
-  themeLink.id = 'theme-link';
-  themeLink.rel = 'stylesheet';
+  const themeLink = document.createElement("link");
+  themeLink.id = "theme-link";
+  themeLink.rel = "stylesheet";
   themeLink.href = `/node_modules/primevue/resources/themes/${theme}/theme.css`; // Sesuaikan dengan path tema yang benar
   document.head.appendChild(themeLink);
 }
@@ -132,19 +135,19 @@ function switchTheme(theme: string) {
 function toggleDarkMode() {
   checked.value = !checked.value;
   if (checked.value) {
-    switchTheme('aura-dark-lime'); 
-    localStorage.setItem('dark-mode', 'true');
+    switchTheme("aura-dark-lime");
+    localStorage.setItem("dark-mode", "true");
   } else {
-    switchTheme('saga-blue'); 
-    localStorage.setItem('dark-mode', 'false');
+    switchTheme("saga-blue");
+    localStorage.setItem("dark-mode", "false");
   }
 }
 
 function applyInitialTheme() {
   if (checked.value) {
-    switchTheme('aura-dark-lime'); 
+    switchTheme("aura-dark-lime");
   } else {
-    switchTheme('saga-blue');
+    switchTheme("saga-blue");
   }
 }
 watch(checked, (newValue) => {
@@ -163,7 +166,9 @@ applyInitialTheme();
 
 <style scoped>
 .custom-menubar {
-  padding-left: 4rem;
+  padding-left: 47rem;
+  position: fixed;
+  z-index: 999;
 }
 
 .p-menubar .p-menuitem:first-child .p-menuitem-text {
@@ -249,7 +254,7 @@ applyInitialTheme();
 </style>
 
 <style>
-html.light  {
+html.light {
   --bg-color: white;
   --text-color: black;
 }
@@ -259,7 +264,7 @@ html.dark {
   --text-color: white;
 }
 
-body{
+body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
