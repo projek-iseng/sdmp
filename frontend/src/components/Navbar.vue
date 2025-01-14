@@ -166,9 +166,7 @@ applyInitialTheme();
 
 <style scoped>
 .custom-menubar {
-  padding-left: 47rem;
-  position: fixed;
-  z-index: 999;
+  padding-left: 4rem;
 }
 
 .p-menubar .p-menuitem:first-child .p-menuitem-text {
