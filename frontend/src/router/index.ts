@@ -25,6 +25,12 @@ const routes = [
       import(/* webpackChunkName: "home" */ "../views/Calendar.vue"),
   },
   {
+    path: "/pengajuancuti",
+    name: "pengajuancuti",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/FormPengajuanCuti.vue"),
+  },
+  {
     path: "/auth",
     name: "auth",
     component: () =>

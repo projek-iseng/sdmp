@@ -25,13 +25,13 @@ import imgLogo from "../../../public/game.svg";
           </div>
           <div class="username">
             <FloatLabel>
-              <InputText class="inputUsername" v-model="value" />
+              <InputText class="inputUsername" v-model="value" id="username" />
               <label for="username">Username</label>
             </FloatLabel>
           </div>
           <div class="password">
             <FloatLabel>
-              <InputText class="inputPassword" v-model="value" />
+              <InputText class="inputPassword" v-model="value" id="password" />
               <label for="password">Password</label>
             </FloatLabel>
           </div>
