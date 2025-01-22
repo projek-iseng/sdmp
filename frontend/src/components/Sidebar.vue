@@ -192,6 +192,16 @@
                 <li>
                   <a
                     v-ripple
+                    href="/penilaiankinerja"
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
+                  >
+                    <i class="pi pi-calendar mr-2"></i>
+                    <span class="font-medium">Form Penilaian Kinerja</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    v-ripple
                     href="/calendar"
                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                   >
@@ -232,17 +242,7 @@
                 <li>
                   <a
                     v-ripple
-                    href="/calendar"
-                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
-                  >
-                    <i class="pi pi-calendar mr-2"></i>
-                    <span class="font-medium">Penilaian Kinerja</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    v-ripple
-                    href="/calendar"
+                    href="/pelatihandanpengembangan"
                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                   >
                     <i class="pi pi-calendar mr-2"></i>

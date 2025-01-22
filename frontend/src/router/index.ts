@@ -31,6 +31,22 @@ const routes = [
       import(/* webpackChunkName: "home" */ "../views/FormPengajuanCuti.vue"),
   },
   {
+    path: "/penilaiankinerja",
+    name: "penilaiankinerja",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/FormPenilaianKinerja.vue"
+      ),
+  },
+  {
+    path: "/pelatihandanpengembangan",
+    name: "pelatihandanpengembangan",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/FormPelatihanDanPengembangan.vue"
+      ),
+  },
+  {
     path: "/auth",
     name: "auth",
     component: () =>

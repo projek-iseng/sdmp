@@ -1,92 +1,99 @@
 <template>
-  <div style="max-width: 600px">
-    <h3>Form Pengajuan Cuti</h3>
-    <form @submit.prevent="submitForm">
-      <div class="field">
-        <label for="nama">Nama Karyawan</label>
-        <InputText
-          id="nama"
-          v-model="form.nama"
-          required
-          placeholder="Masukkan nama karyawan"
-          class="p-inputtext-lg"
-        />
-      </div>
+  <div style="max-width: 800px; margin: 0 auto">
+    <h2>Form Pengajuan Cuti</h2>
 
-      <div class="field">
-        <label for="startDate">Tanggal Mulai</label>
-        <Calendar
-          id="startDate"
-          v-model="form.startDate"
-          dateFormat="dd/mm/yy"
-          placeholder="Pilih tanggal mulai"
-          required
-          class="p-inputtext-lg"
-        />
-      </div>
+    <Tabs>
+      <!-- Tab 1: Pengajuan Cuti -->
+      <TabPanel header="Pengajuan Cuti">
+        <form @submit.prevent="submitLeaveForm">
+          <div class="field">
+            <label for="leaveName">Nama Karyawan</label>
+            <InputText
+              id="leaveName"
+              v-model="leaveForm.nama"
+              required
+              placeholder="Masukkan nama karyawan"
+              class="p-inputtext-lg full-width"
+            />
+          </div>
 
-      <div class="field">
-        <label for="endDate">Tanggal Selesai</label>
-        <Calendar
-          id="endDate"
-          v-model="form.endDate"
-          dateFormat="dd/mm/yy"
-          placeholder="Pilih tanggal selesai"
-          required
-          class="p-inputtext-lg"
-        />
-      </div>
+          <div class="field">
+            <label for="leaveStartDate">Tanggal Mulai</label>
+            <Calendar
+              id="leaveStartDate"
+              v-model="leaveForm.startDate"
+              dateFormat="dd/mm/yy"
+              placeholder="Pilih tanggal mulai"
+              required
+              class="p-inputtext-lg full-width"
+            />
+          </div>
 
-      <div class="field">
-        <label for="leaveType">Tipe Cuti</label>
-        <Dropdown
-          id="leaveType"
-          v-model="form.leaveType"
-          :options="leaveTypes"
-          optionLabel="name"
-          placeholder="Pilih tipe cuti"
-          required
-          class="p-inputtext-lg"
-        />
-      </div>
+          <div class="field">
+            <label for="leaveEndDate">Tanggal Selesai</label>
+            <Calendar
+              id="leaveEndDate"
+              v-model="leaveForm.endDate"
+              dateFormat="dd/mm/yy"
+              placeholder="Pilih tanggal selesai"
+              required
+              class="p-inputtext-lg full-width"
+            />
+          </div>
 
-      <div class="field">
-        <label for="reason">Alasan Cuti</label>
-        <Textarea
-          id="reason"
-          v-model="form.reason"
-          rows="3"
-          placeholder="Masukkan alasan cuti"
-          required
-          class="p-inputtext-lg"
-        />
-      </div>
+          <div class="field">
+            <label for="leaveType">Tipe Cuti</label>
+            <Dropdown
+              id="leaveType"
+              v-model="leaveForm.leaveType"
+              :options="leaveTypes"
+              optionLabel="name"
+              placeholder="Pilih tipe cuti"
+              required
+              class="p-inputtext-lg full-width"
+            />
+          </div>
 
-      <div class="mt-4 flex justify-content-end">
-        <Button
-          label="Batal"
-          icon="pi pi-times"
-          class="p-button-text"
-          @click="cancelForm"
-        />
-        <Button
-          label="Ajukan"
-          icon="pi pi-check"
-          severity="success"
-          type="submit"
-        />
-      </div>
-    </form>
+          <div class="field">
+            <label for="leaveReason">Alasan Cuti</label>
+            <Textarea
+              id="leaveReason"
+              v-model="leaveForm.reason"
+              rows="3"
+              placeholder="Masukkan alasan cuti"
+              required
+              class="p-inputtext-lg full-width"
+            />
+          </div>
+
+          <div class="mt-4 flex justify-content-end">
+            <Button
+              label="Batal"
+              icon="pi pi-times"
+              class="p-button-text"
+              @click="cancelLeaveForm"
+            />
+            <Button
+              label="Ajukan"
+              icon="pi pi-check"
+              severity="success"
+              type="submit"
+            />
+          </div>
+        </form>
+      </TabPanel>
+    </Tabs>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
 
-// Reactive form state
-const form = ref({
+const toast = useToast();
+
+// Form states
+const leaveForm = ref({
   nama: "",
   startDate: null,
   endDate: null,
@@ -94,54 +101,91 @@ const form = ref({
   reason: "",
 });
 
-// List of leave types
+const officeExitForm = ref({
+  nama: "",
+  date: null,
+  time: "",
+  reason: "",
+});
+
+const overtimeForm = ref({
+  nama: "",
+  date: null,
+  duration: null,
+  reason: "",
+});
+
+// Leave types
 const leaveTypes = [
   { name: "Cuti Tahunan", code: "annual" },
   { name: "Cuti Sakit", code: "sick" },
   { name: "Cuti Melahirkan", code: "maternity" },
 ];
 
-// Method to reset form fields
-const openNew = () => {
-  form.value = {
+// Form handlers
+const submitLeaveForm = () => {
+  console.log(leaveForm.value);
+  toast.add({
+    severity: "success",
+    summary: "Berhasil",
+    detail: "Pengajuan cuti berhasil!",
+    life: 3000,
+  });
+};
+
+const cancelLeaveForm = () =>
+  (leaveForm.value = {
     nama: "",
     startDate: null,
     endDate: null,
     leaveType: null,
     reason: "",
-  };
+  });
+
+const submitOfficeExitForm = () => {
+  console.log(officeExitForm.value);
+  toast.add({
+    severity: "success",
+    summary: "Berhasil",
+    detail: "Izin keluar kantor berhasil!",
+    life: 3000,
+  });
 };
 
-// Method to handle form submission
-const submitForm = () => {
-  console.log(form.value); // Logic for submitting the form
-};
-
-// Method to cancel the form
-const cancelForm = () => {
-  form.value = {
+const cancelOfficeExitForm = () =>
+  (officeExitForm.value = {
     nama: "",
-    startDate: null,
-    endDate: null,
-    leaveType: null,
+    date: null,
+    time: "",
     reason: "",
-  };
+  });
+
+const submitOvertimeForm = () => {
+  console.log(overtimeForm.value);
+  toast.add({
+    severity: "success",
+    summary: "Berhasil",
+    detail: "Pengajuan lembur berhasil!",
+    life: 3000,
+  });
 };
+
+const cancelOvertimeForm = () =>
+  (overtimeForm.value = {
+    nama: "",
+    date: null,
+    duration: null,
+    reason: "",
+  });
 </script>
 
 <style scoped>
-/* .card {
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-} */
-
 .field {
-  margin-left: auto;
+  margin-bottom: 1rem;
 }
-h3 {
-  text-align: left;
-  margin-bottom: 30px;
+
+.full-width {
+  width: 100%;
 }
 
 .mt-4 {
