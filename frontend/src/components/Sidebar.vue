@@ -202,7 +202,7 @@
                 <li>
                   <a
                     v-ripple
-                    href="/calendar"
+                    href="/managementkaryawan"
                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple"
                   >
                     <i class="pi pi-calendar mr-2"></i>

@@ -39,6 +39,12 @@ const routes = [
       ),
   },
   {
+    path: "/managementkaryawan",
+    name: "managementkaryawan",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/ManajemenKaryawan.vue"),
+  },
+  {
     path: "/pelatihandanpengembangan",
     name: "pelatihandanpengembangan",
     component: () =>

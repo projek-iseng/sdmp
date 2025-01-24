@@ -1,6 +1,6 @@
 <template>
   <div style="max-width: 800px; margin: 0; text-align: left">
-    <h2>Form Penilaian Kerja Karyawan</h2>
+    <h2>Form Penilaian Kinerja Karyawan</h2>
 
     <form @submit.prevent="submitEvaluationForm">
       <div class="field">
@@ -10,6 +10,17 @@
           v-model="evaluationForm.nama"
           required
           placeholder="Masukkan nama karyawan"
+          class="p-inputtext-lg full-width"
+        />
+      </div>
+
+      <div class="field">
+        <label for="employeeId">ID Karyawan</label>
+        <InputText
+          id="employeeId"
+          v-model="evaluationForm.id"
+          required
+          placeholder="Masukkan ID karyawan"
           class="p-inputtext-lg full-width"
         />
       </div>
@@ -26,81 +37,126 @@
         />
       </div>
 
-      <!-- Penilaian Kerja -->
-      <h3>Penilaian Kerja</h3>
-      <div class="penilaian-table">
-        <div class="row">
-          <div class="col">
-            <label>Aspek Penilaian</label>
-          </div>
-          <div class="col">
-            <label>A</label>
-          </div>
-          <div class="col">
-            <label>B</label>
-          </div>
-          <div class="col">
-            <label>C</label>
-          </div>
-          <div class="col">
-            <label>D</label>
-          </div>
-          <div class="col">
-            <label>E</label>
-          </div>
-        </div>
+      <h3>Penilaian Kinerja</h3>
 
-        <div class="row" v-for="(aspect, index) in aspects" :key="index">
-          <div class="col">
-            <label>{{ aspect }}</label>
+      <div class="field">
+        <label for="kpi">KPI (Key Performance Indicators)</label>
+        <div class="table">
+          <div class="row">
+            <div class="col">Target</div>
+            <div class="col">Pencapaian</div>
+            <div class="col">Nilai</div>
           </div>
-          <div class="col">
-            <RadioButton
-              v-model="evaluationForm[aspect]"
-              :value="'A'"
-              class="mr-2"
-            />
-          </div>
-          <div class="col">
-            <RadioButton
-              v-model="evaluationForm[aspect]"
-              :value="'B'"
-              class="mr-2"
-            />
-          </div>
-          <div class="col">
-            <RadioButton
-              v-model="evaluationForm[aspect]"
-              :value="'C'"
-              class="mr-2"
-            />
-          </div>
-          <div class="col">
-            <RadioButton
-              v-model="evaluationForm[aspect]"
-              :value="'D'"
-              class="mr-2"
-            />
-          </div>
-          <div class="col">
-            <RadioButton
-              v-model="evaluationForm[aspect]"
-              :value="'E'"
-              class="mr-2"
-            />
+          <div
+            class="row"
+            v-for="(kpi, index) in evaluationForm.kpi"
+            :key="index"
+          >
+            <div class="col">
+              <InputText v-model="kpi.target" placeholder="Masukkan target" />
+            </div>
+            <div class="col">
+              <InputText
+                v-model="kpi.achievement"
+                placeholder="Masukkan pencapaian"
+              />
+            </div>
+            <div class="col">
+              <InputText v-model="kpi.score" placeholder="Nilai" />
+            </div>
           </div>
         </div>
       </div>
-      <!-- Komentar -->
+
       <div class="field">
-        <label for="additionalComments">Komentar Tambahan</label>
-        <Textarea
-          id="additionalComments"
-          v-model="evaluationForm.comments"
-          rows="4"
-          placeholder="Tambahkan komentar tambahan"
-          class="p-inputtext-lg full-width"
-        />
+        <label for="feedback360">360-Degree Feedback</label>
+        <div class="table">
+          <div class="row">
+            <div class="col">Aspek</div>
+            <div class="col">Rekan Kerja</div>
+            <div class="col">Supervisor</div>
+            <div class="col">Bawahan</div>
+          </div>
+          <div
+            class="row"
+            v-for="(aspect, index) in evaluationForm.feedback360"
+            :key="index"
+          >
+            <div class="col">
+              <label>{{ aspect.name }}</label>
+            </div>
+            <div class="col">
+              <RadioButton v-model="aspect.peer" :value="'A'" /> A
+              <RadioButton v-model="aspect.peer" :value="'B'" /> B
+              <RadioButton v-model="aspect.peer" :value="'C'" /> C
+              <RadioButton v-model="aspect.peer" :value="'D'" /> D
+              <RadioButton v-model="aspect.peer" :value="'E'" /> E
+            </div>
+            <div class="col">
+              <RadioButton v-model="aspect.supervisor" :value="'A'" /> A
+              <RadioButton v-model="aspect.supervisor" :value="'B'" /> B
+              <RadioButton v-model="aspect.supervisor" :value="'C'" /> C
+              <RadioButton v-model="aspect.supervisor" :value="'D'" /> D
+              <RadioButton v-model="aspect.supervisor" :value="'E'" /> E
+            </div>
+            <div class="col">
+              <RadioButton v-model="aspect.subordinate" :value="'A'" /> A
+              <RadioButton v-model="aspect.subordinate" :value="'B'" /> B
+              <RadioButton v-model="aspect.subordinate" :value="'C'" /> C
+              <RadioButton v-model="aspect.subordinate" :value="'D'" /> D
+              <RadioButton v-model="aspect.subordinate" :value="'E'" /> E
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="taskCompletion">Penyelesaian Tugas</label>
+        <div class="table">
+          <div class="row">
+            <div class="col">Tugas</div>
+            <div class="col">Status</div>
+          </div>
+          <div
+            class="row"
+            v-for="(task, index) in evaluationForm.tasks"
+            :key="index"
+          >
+            <div class="col">
+              <InputText v-model="task.name" placeholder="Nama tugas" />
+            </div>
+            <div class="col">
+              <Dropdown
+                v-model="task.status"
+                :options="statusOptions"
+                placeholder="Pilih status"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Penilaian Aspek Kinerja</h3>
+      <div class="field">
+        <label for="communication">Komunikasi</label>
+        <div class="table">
+          <div class="row">
+            <div class="col">Skor</div>
+          </div>
+          <br />
+          <div class="row">
+            <RadioButton v-model="evaluationForm.communication" :value="'A'" />
+            A
+            <RadioButton v-model="evaluationForm.communication" :value="'B'" />
+            B
+            <RadioButton v-model="evaluationForm.communication" :value="'C'" />
+            C
+            <RadioButton v-model="evaluationForm.communication" :value="'D'" />
+            D
+            <RadioButton v-model="evaluationForm.communication" :value="'E'" />
+            E
+          </div>
+        </div>
       </div>
 
       <div class="mt-4 flex justify-content-end">
@@ -129,31 +185,21 @@ const toast = useToast();
 
 const evaluationForm = ref({
   nama: "",
+  id: "",
   date: null,
-  comments: "",
-  attendance: [
-    { date: "01/01/2025", status: "Hadir" },
-    { date: "02/01/2025", status: "Izin" },
-    // Tambahkan data absensi sesuai kebutuhan
+  kpi: [{ target: "", achievement: "", score: "" }],
+  feedback360: [
+    { name: "Komunikasi", peer: null, supervisor: null, subordinate: null },
+    { name: "Kerjasama", peer: null, supervisor: null, subordinate: null },
   ],
-  tasks: [
-    "Mengerjakan laporan bulanan",
-    "Mengikuti rapat tim",
-    // Tambahkan task sesuai kebutuhan
-  ],
-  jobKnowledge: null,
-  workQuality: null,
+  tasks: [{ name: "", status: "" }],
   communication: null,
-  teamwork: null,
-  dependability: null,
 });
 
-const aspects = [
-  "Pengetahuan Keja",
-  "Kualitas Kerja",
-  "Komunikasi",
-  "Kerjasama",
-  "Individual",
+const statusOptions = [
+  { label: "Selesai", value: "Selesai" },
+  { label: "Dalam Proses", value: "Dalam Proses" },
+  { label: "Belum Dimulai", value: "Belum Dimulai" },
 ];
 
 const submitEvaluationForm = () => {
@@ -161,7 +207,7 @@ const submitEvaluationForm = () => {
   toast.add({
     severity: "success",
     summary: "Berhasil",
-    detail: "Penilaian kerja berhasil disimpan!",
+    detail: "Penilaian kinerja berhasil disimpan!",
     life: 3000,
   });
 };
@@ -169,15 +215,15 @@ const submitEvaluationForm = () => {
 const cancelEvaluationForm = () => {
   evaluationForm.value = {
     nama: "",
+    id: "",
     date: null,
-    comments: "",
-    attendance: [],
-    tasks: [],
-    jobKnowledge: null,
-    workQuality: null,
+    kpi: [{ target: "", achievement: "", score: "" }],
+    feedback360: [
+      { name: "Komunikasi", peer: null, supervisor: null, subordinate: null },
+      { name: "Kerjasama", peer: null, supervisor: null, subordinate: null },
+    ],
+    tasks: [{ name: "", status: "" }],
     communication: null,
-    teamwork: null,
-    dependability: null,
   };
 };
 </script>
@@ -199,31 +245,19 @@ const cancelEvaluationForm = () => {
   margin-right: 1rem;
 }
 
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
-.penilaian-table {
-  margin-bottom: 1.5rem;
+.table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
+  display: table-row;
 }
 
 .col {
-  flex: 1;
-  text-align: center;
-}
-
-.col label {
-  display: block;
-}
-
-.radio-button {
-  display: inline-block;
-  margin-right: 10px;
+  display: table-cell;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
 }
 </style>
