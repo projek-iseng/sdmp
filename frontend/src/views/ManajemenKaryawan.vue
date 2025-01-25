@@ -2,20 +2,40 @@
   <div>
     <h1>Manajemen Karyawan</h1>
 
-    <!-- Pengelompokan Departemen dengan AutoComplete -->
+    <!-- Pengelompokan Departemen -->
     <div class="filter-section">
       <label for="department">Pilih Departemen:</label>
-      <AutoComplete
-        v-model="selectedDepartment"
-        dropdown
-        :suggestions="departmentSuggestions"
-        @complete="searchDepartments"
-      />
-      <Button label="Filter" icon="pi pi-filter" @click="filterByDepartment" />
+      <select id="department" v-model="selectedDepartment">
+        <option value="">Semua Departemen</option>
+        <option
+          v-for="department in allDepartments"
+          :key="department"
+          :value="department"
+        >
+          {{ department }}
+        </option>
+      </select>
+      <button class="filter-button" @click="filterByDepartment">Filter</button>
     </div>
 
     <!-- Data Karyawan -->
     <h2>Data Karyawan</h2>
+    <label for="rowsPerPage">Tampilkan:</label>
+    <select
+      id="rowsPerPage"
+      v-model.number="rowsPerPage"
+      @change="updateTableRange"
+    >
+      <option
+        v-for="option in rowsPerPageOptions"
+        :value="option"
+        :key="option"
+      >
+        {{ option }}
+      </option>
+    </select>
+
+    <BR></BR>
     <table class="employee-table">
       <thead>
         <tr>
@@ -29,7 +49,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="employee in employees" :key="employee.id">
+        <tr v-for="employee in paginatedEmployees" :key="employee.id">
           <td>{{ employee.id }}</td>
           <td>{{ employee.name }}</td>
           <td>{{ employee.address }}</td>
@@ -40,36 +60,11 @@
         </tr>
       </tbody>
     </table>
-
-    <!-- Riwayat Kerja -->
-    <h2>Riwayat Kerja</h2>
-    <div>
-      <label for="employeeId">Pilih Karyawan:</label>
-      <select v-model="selectedEmployeeId" id="employeeId">
-        <option
-          v-for="employee in employees"
-          :value="employee.id"
-          :key="employee.id"
-        >
-          {{ employee.name }}
-        </option>
-      </select>
-      <div v-if="selectedEmployeeHistory.length">
-        <h3>Riwayat untuk Karyawan ID: {{ selectedEmployeeId }}</h3>
-        <ul>
-          <li v-for="(history, index) in selectedEmployeeHistory" :key="index">
-            {{ history.date }} - {{ history.event }}
-          </li>
-        </ul>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-// import AutoComplete from "primevue/autocomplete";
-// import Button from "primevue/button";
+import { ref, computed } from "vue";
 
 const employeeData = Array.from({ length: 50 }, (v, i) => ({
   id: i + 1,
@@ -85,19 +80,13 @@ const employeeData = Array.from({ length: 50 }, (v, i) => ({
   ],
 }));
 
+const allDepartments = ["HR", "IT", "Finance"];
 const selectedDepartment = ref("");
 const employees = ref(employeeData);
 const selectedEmployeeId = ref(null);
-const departmentSuggestions = ref([]);
-
-const searchDepartments = (event) => {
-  const allDepartments = ["HR", "IT", "Finance"];
-  departmentSuggestions.value = event.query
-    ? allDepartments.filter((d) =>
-        d.toLowerCase().includes(event.query.toLowerCase())
-      )
-    : allDepartments;
-};
+const rowsPerPage = ref(5);
+const rowsPerPageOptions = [5, 10, 15];
+const currentPage = ref(1);
 
 const filterByDepartment = () => {
   if (selectedDepartment.value) {
@@ -107,6 +96,17 @@ const filterByDepartment = () => {
   } else {
     employees.value = employeeData;
   }
+  currentPage.value = 1;
+};
+
+const paginatedEmployees = computed(() => {
+  const start = (currentPage.value - 1) * rowsPerPage.value;
+  const end = start + rowsPerPage.value;
+  return employees.value.slice(start, end);
+});
+
+const updateTableRange = () => {
+  currentPage.value = 1;
 };
 
 const selectedEmployeeHistory = computed(() => {
@@ -123,6 +123,22 @@ const selectedEmployeeHistory = computed(() => {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-direction: column;
+  position: relative;
+}
+
+.filter-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  background-color: #45a049;
 }
 
 .employee-table {
@@ -130,12 +146,14 @@ const selectedEmployeeHistory = computed(() => {
   border-collapse: collapse;
   margin-bottom: 20px;
 }
+
 .employee-table th,
 .employee-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
 }
+
 .employee-table th {
   background-color: #f2f2f2;
 }
