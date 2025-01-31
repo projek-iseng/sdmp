@@ -1,11 +1,16 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Manajemen Karyawan</h1>
 
-    <!-- Pengelompokan Departemen -->
-    <div class="filter-section">
-      <label for="department">Pilih Departemen:</label>
-      <select id="department" v-model="selectedDepartment">
+    <!-- Pencarian & Filter -->
+    <div class="controls">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Cari karyawan..."
+        class="search-input"
+      />
+      <select v-model="selectedDepartment" @change="filterByDepartment">
         <option value="">Semua Departemen</option>
         <option
           v-for="department in allDepartments"
@@ -15,37 +20,20 @@
           {{ department }}
         </option>
       </select>
-      <button class="filter-button" @click="filterByDepartment">Filter</button>
     </div>
 
     <!-- Data Karyawan -->
-    <h2>Data Karyawan</h2>
-    <label for="rowsPerPage">Tampilkan:</label>
-    <select
-      id="rowsPerPage"
-      v-model.number="rowsPerPage"
-      @change="updateTableRange"
-    >
-      <option
-        v-for="option in rowsPerPageOptions"
-        :value="option"
-        :key="option"
-      >
-        {{ option }}
-      </option>
-    </select>
-
-    <BR></BR>
     <table class="employee-table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Nama</th>
           <th>Alamat</th>
-          <th>Nomor Kontak</th>
+          <th>Kontak</th>
           <th>Status</th>
           <th>Departemen</th>
           <th>Jabatan</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -57,14 +45,43 @@
           <td>{{ employee.status }}</td>
           <td>{{ employee.department }}</td>
           <td>{{ employee.jobTitle }}</td>
+          <td><button @click="showHistory(employee.id)">Riwayat</button></td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">
+        &laquo; Prev
+      </button>
+      <span>Halaman {{ currentPage }}</span>
+      <button
+        @click="nextPage"
+        :disabled="currentPage * rowsPerPage >= employees.length"
+      >
+        Next &raquo;
+      </button>
+    </div>
+
+    <!-- Modal Riwayat Kerja -->
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <h2>Riwayat Kerja</h2>
+        <ul>
+          <li v-for="history in selectedEmployeeHistory" :key="history.date">
+            {{ history.date }} - {{ history.event }}
+          </li>
+        </ul>
+        <button @click="showModal = false">Tutup</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
+import Button from "primevue/button";
 
 const employeeData = Array.from({ length: 50 }, (v, i) => ({
   id: i + 1,
@@ -82,63 +99,69 @@ const employeeData = Array.from({ length: 50 }, (v, i) => ({
 
 const allDepartments = ["HR", "IT", "Finance"];
 const selectedDepartment = ref("");
+const searchQuery = ref("");
 const employees = ref(employeeData);
-const selectedEmployeeId = ref(null);
 const rowsPerPage = ref(5);
-const rowsPerPageOptions = [5, 10, 15];
 const currentPage = ref(1);
+const showModal = ref(false);
+const selectedEmployeeId = ref(null);
 
 const filterByDepartment = () => {
-  if (selectedDepartment.value) {
-    employees.value = employeeData.filter(
-      (e) => e.department === selectedDepartment.value
-    );
-  } else {
-    employees.value = employeeData;
-  }
+  employees.value = employeeData.filter(
+    (e) =>
+      (selectedDepartment.value
+        ? e.department === selectedDepartment.value
+        : true) &&
+      (searchQuery.value
+        ? e.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        : true)
+  );
   currentPage.value = 1;
 };
 
 const paginatedEmployees = computed(() => {
   const start = (currentPage.value - 1) * rowsPerPage.value;
-  const end = start + rowsPerPage.value;
-  return employees.value.slice(start, end);
+  return employees.value.slice(start, start + rowsPerPage.value);
 });
 
-const updateTableRange = () => {
-  currentPage.value = 1;
+const nextPage = () => {
+  if (currentPage.value * rowsPerPage.value < employees.value.length)
+    currentPage.value++;
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
+
+const showHistory = (id) => {
+  selectedEmployeeId.value = id;
+  showModal.value = true;
 };
 
 const selectedEmployeeHistory = computed(() => {
   const employee = employees.value.find(
-    (e) => e.id === parseInt(selectedEmployeeId.value, 10)
+    (e) => e.id === selectedEmployeeId.value
   );
   return employee ? employee.workHistory : [];
 });
 </script>
 
 <style scoped>
-.filter-section {
-  margin-bottom: 20px;
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.controls {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-direction: column;
-  position: relative;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.filter-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.filter-button:hover {
-  background-color: #45a049;
+.search-input {
+  padding: 8px;
+  width: 200px;
 }
 
 .employee-table {
@@ -156,5 +179,29 @@ const selectedEmployeeHistory = computed(() => {
 
 .employee-table th {
   background-color: #f2f2f2;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
 }
 </style>
